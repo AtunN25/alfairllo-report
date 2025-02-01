@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
+    "@react-pdf/renderer": "^4.1.6",
     "cloudinary": "^2.5.1",
     "next": "15.1.4",
     "pg": "^8.13.1",
+    "puppeteer": "^24.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

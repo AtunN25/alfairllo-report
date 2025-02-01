@@ -1,4 +1,6 @@
+
 import Link from 'next/link';
+
 
 export default function Home() {
   return (
@@ -18,7 +20,14 @@ export default function Home() {
               formulario
             </Link>
           </li>
-          
+
+          <li>Link hacia el {' '} 
+            <Link href="/pages/reporte" className="text-blue-500 hover:underline">
+              Reporte
+            </Link>
+          </li>
+
+         
         </ol>
 
        
