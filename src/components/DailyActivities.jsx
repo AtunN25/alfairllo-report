@@ -1,49 +1,67 @@
 "use client";
 import React, { useState } from 'react';
 
+
 function DailyActivities() {
 
- 
-    const [formData, setFormData] = useState({
-      title: "",
-      picture: "",
-      report_id: "",
-    });
-  
+    const [title, setTitle] = useState('');
+    //const [picture, setPicture] = useState('');
+    const [reportId, setReportId] = useState('');
+    const [message, setMessage] = useState('');
+
+    const [file, setFile] = useState(null);
+
+    const handleFileChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]); // Actualiza el estado con el archivo seleccionado
+        }
+    };
+
+
 
     const handleSubmit = async (e) => {
-      e.preventDefault();
-      const { title, picture, report_id } = formData;
-  
-      if (!title || !picture || !report_id) {
-        alert("All fields are required!");
-        return;
-      }
-  
-      try {
+        e.preventDefault();
 
-        console.log(JSON.stringify(formData))
-        const res = await fetch("http://localhost:3000/api/daily_activities", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
-  
-        if (!res.ok) throw new Error("Failed to submit report");
-        alert("Report submitted successfully!");
-      } catch (error) {
-        console.error("Error submitting report:", error);
-      }
-    };
-  
-    const handleChange = (e) => {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
+
+        if (!file) {
+            setMessage('Por favor, selecciona una imagen');
+            return;
+        }
+
+
+        const formData = new FormData()
+
+        formData.append('title', title);
+        formData.append('report_id', reportId);
+        formData.append('picture', file); // Agregar el archivo de imagen
+
+        console.log(formData)
+        try {
+            const response = await fetch('/api/daily_activities', {
+                method: 'POST',
+
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage('Actividad diaria agregada con éxito');
+                setTitle('');
+                //setPicture('');
+                setReportId('');
+            } else {
+                setMessage(data.error || 'Error al agregar la actividad');
+            }
+        } catch (error) {
+            setMessage(error + ' Error de conexión con el servidor');
+        }
     };
 
 
     return (
         <div className="p-10 space-y-6">
-        
+
 
             <form
                 className="space-y-4 max-w-md p-6 border border-gray-200 rounded-lg shadow dark:border-gray-700"
@@ -58,8 +76,8 @@ function DailyActivities() {
                         type="text"
                         id="title"
                         name="title"
-                        value={formData.title}
-                        onChange={handleChange}
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         required
                     />
@@ -67,16 +85,16 @@ function DailyActivities() {
 
                 <div>
                     <label htmlFor="picture" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                        Picture URL:
+                        Seleccione Imagen:
                     </label>
                     <input
-                        type="url"
+                        type="file"
                         id="picture"
-                        name="picture"
-                        value={formData.picture}
-                        onChange={handleChange}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        accept="image/*"
+                        onChange={handleFileChange}
                         required
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      
                     />
                 </div>
 
@@ -88,8 +106,8 @@ function DailyActivities() {
                         type="number"
                         id="report_id"
                         name="report_id"
-                        value={formData.report_id}
-                        onChange={handleChange}
+                        value={reportId}
+                        onChange={(e) => setReportId(e.target.value)}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         required
                     />

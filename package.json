@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
+    "cloudinary": "^2.5.1",
     "next": "15.1.4",
     "pg": "^8.13.1",
     "react": "^19.0.0",
