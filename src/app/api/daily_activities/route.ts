@@ -20,7 +20,7 @@ export async function POST(req: Request) {
 
     const image = data.get('picture')
 
-    if(!image) {
+    if (!(image instanceof File)) {
       return NextResponse.json({ error: "La imagen es requerida" }, { status: 400 });
     }
     
