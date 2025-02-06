@@ -2,5 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-
+.cartadiv {
+    @apply max-w-sm rounded overflow-hidden shadow-lg bg-white;
+  }
 

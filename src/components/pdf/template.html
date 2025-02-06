@@ -1,92 +1,518 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reporte PDF</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
     }
+
     h1 {
       text-align: center;
       color: #333;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      font-size: 8px;
+      /* Mantener el tamaño de la fuente pequeño */
     }
-    th, td {
-      border: 1px solid #000;
-      padding: 8px;
-      text-align: left;
+
+    th,
+    td {
+      font-weight: normal;
+      padding: 4px;
+      /* Reducir el padding para que los textos estén más juntos */
+      border: 1px solid #ddd;
+      /* Mantener un borde delgado entre las celdas */
+      text-align: center;
+      /* Centrar el texto */
     }
-    th {
-      background-color: #f2f2f2;
+
+    thead  {
+      border-top: none;
+      /* Eliminar el borde superior de los encabezados */
     }
+
+     
+
+    tbody {
+      display: table-row-group;
+    }
+
+    td {
+      vertical-align: top;
+      /* Alineación superior de las celdas */
+      padding-left: 2px;
+      /* Reduce el espacio en el lado izquierdo */
+      padding-right: 2px;
+      /* Reduce el espacio en el lado derecho */
+    }
+
+    /* Para hacer que las celdas no tengan márgenes adicionales */
+    table td,
+    table th {
+      margin: 0;
+      padding: 0;
+      /* Reducir al mínimo el padding */
+    }
+
     .logo {
       width: 100px;
       height: auto;
       float: right;
     }
   </style>
+
+
 </head>
+
 <body>
   <img src="logo.png" alt="Logo" class="logo">
   <h1>Reporte Diario de Actividades</h1>
   <p><strong>Fecha:</strong> Noviembre 11, 2024</p>
 
-  <h2>Safety Talk</h2>
+  <h2>1.Inicio de jornada con charla de 5 minutos para todo el personal dictada por supervisor Hugo Macaya</h2>
+
+  <li>
+    <ul>
+      Responsabilidades civiles y penales de los supervisores
+    </ul>
+    <ul>
+      Planificación de los trabajos a ejecutar.
+    </ul>
+  </li>
+
+  <h2>2.Trabajos realizados en muestrera:</h2>
+
+  <li>
+    <ul>
+      Validación de sondajes que están en proceso de perforación
+    </ul>
+    <ul>
+      Traslado de cajas con sondaje a sala de corte
+    </ul>
+    <ul>
+      Ingreso de información a base de datos
+    </ul>
+    <ul>
+
+    </ul>
+    Envío de muestras al laboratorio
+    </ul>
+  </li>
+  <h2>3.Trabajos realizados en sondajes que se encuentran en perforación, ZDDH00356 y ZDDH00358.</h2>
+
+  <p>Regularizado, susceptibilidad magnética, RQD, chequeo de tacos, limpieza de muestra, chequeo línea de orientación,
+    fotografías a cajas con sondajes, densidad, trabajos realizados por asistentes de geólogo.</p>
+
+
+
+
   <table>
     <thead>
       <tr>
-        <th>Título</th>
-        <th>Detalles</th>
+        <!-- Primera columna: LOGO -->
+        <th rowspan="2">LOGO</th>
+
+        <!-- Columna del medio: Recepción Muestra de perforación -->
+        <th>Recepcion Muestra de perforacion</th>
+
+        <!-- Tercera columna: AVANCE DIARIO EN MUESTRA DGG 2024 -->
+        <th rowspan="2">AVANCE DIARIO EN MUESTRA DGG 2024</th>
+      </tr>
+      <tr>
+        <!-- Columna del medio: Turno día y noche -->
+        <th>Turno dia y noche</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody style="padding: 0; border: none;">
       <tr>
-        <td>Charla de 5 minutos</td>
-        <td>Dictada por Supervisor Hugo Macaya</td>
-      </tr>
-    </tbody>
+        <!-- Celda del LOGO con tabla interna -->
+        <td style="padding: 0; border: none;">
+          <table>
+            <thead style="height: 21px;">
+              <tr>
+                <th >EMPRESA</th>
+                <th >FECHA</th>
+                <th >POZO</th>
+              </tr>
+              
+            </thead>
+            <tbody>
+              <tr>
+                <td>Nombre Empresa</td>
+                <td>01/01/2024</td>
+                <td>Pozo 123</td>
+              </tr>
+              <tr>
+                <td>Nombre Empresa</td>
+              <td>01/01/2024</td>
+              <td>Pozo 123</td>
+              </tr>
+              <tr>
+              <td>Nombre Empresa</td>
+              <td>01/01/2024</td>
+              <td>Pozo 123</td>
+              </tr>
+          </tbody>
+        </table>
+  </td>
+  <!-- Otras celdas -->
+  <td style="padding: 0; border: none;">
+    <table>
+      <thead>
+        <tr>
+          <!-- Primera columna: LOGO -->
+          <th rowspan="2">Recepcion de muestra</th>
+
+          <!-- Columna del medio: Recepción Muestra de perforación -->
+          <th>MTS</th>
+
+
+        </tr>
+        <tr>
+          <!-- Columna del medio: Turno día y noche -->
+          <th>PERFORADOS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>33,50</td>
+          <td>49,25</td>
+        </tr>
+        <tr></tr>
+        <td>33,50</td>
+        <td>49,25</td>
+        </tr>
+        </tr>
+        <td>33,50</td>
+        <td>49,25</td>
+        </tr>
+      </tbody>
+    </table>
+  </td>
+
+  <td style="padding: 0; border: none;">
+
+
+    <div style="display: flex; flex-direction: row;">
+      <table>
+        <thead>
+          <!-- Primer encabezado que ocupa 3 columnas -->
+          <tr>
+            <th colspan="3">FOTOGRAFIA</th>
+          </tr>
+          <!-- Segundo encabezado con 3 columnas -->
+          <tr>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Primera fila de datos -->
+          <tr>
+            <td>100</td>
+            <td>200</td>
+            <td>300</td>
+          </tr>
+          <!-- Segunda fila de datos -->
+          <tr>
+            <td>150</td>
+            <td>250</td>
+            <td>400</td>
+          </tr>
+          <!-- Tercera fila de datos -->
+          <tr>
+            <td>120</td>
+            <td>220</td>
+            <td>340</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <thead>
+          <!-- Primer encabezado que ocupa 3 columnas -->
+          <tr>
+            <th colspan="3">FOTOGRAFIA</th>
+          </tr>
+          <!-- Segundo encabezado con 3 columnas -->
+          <tr>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Primera fila de datos -->
+          <tr>
+            <td>100</td>
+            <td>200</td>
+            <td>300</td>
+          </tr>
+          <!-- Segunda fila de datos -->
+          <tr>
+            <td>150</td>
+            <td>250</td>
+            <td>400</td>
+          </tr>
+          <!-- Tercera fila de datos -->
+          <tr>
+            <td>120</td>
+            <td>220</td>
+            <td>340</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <thead>
+          <!-- Primer encabezado que ocupa 3 columnas -->
+          <tr>
+            <th colspan="3">FOTOGRAFIA</th>
+          </tr>
+          <!-- Segundo encabezado con 3 columnas -->
+          <tr>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Primera fila de datos -->
+          <tr>
+            <td>100</td>
+            <td>200</td>
+            <td>300</td>
+          </tr>
+          <!-- Segunda fila de datos -->
+          <tr>
+            <td>150</td>
+            <td>250</td>
+            <td>400</td>
+          </tr>
+          <!-- Tercera fila de datos -->
+          <tr>
+            <td>120</td>
+            <td>220</td>
+            <td>340</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <thead>
+          <!-- Primer encabezado que ocupa 3 columnas -->
+          <tr>
+            <th colspan="3">FOTOGRAFIA</th>
+          </tr>
+          <!-- Segundo encabezado con 3 columnas -->
+          <tr>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Primera fila de datos -->
+          <tr>
+            <td>100</td>
+            <td>200</td>
+            <td>300</td>
+          </tr>
+          <!-- Segunda fila de datos -->
+          <tr>
+            <td>150</td>
+            <td>250</td>
+            <td>400</td>
+          </tr>
+          <!-- Tercera fila de datos -->
+          <tr>
+            <td>120</td>
+            <td>220</td>
+            <td>340</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <thead>
+          <!-- Primer encabezado que ocupa 3 columnas -->
+          <tr>
+            <th colspan="3">FOTOGRAFIA</th>
+          </tr>
+          <!-- Segundo encabezado con 3 columnas -->
+          <tr>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Primera fila de datos -->
+          <tr>
+            <td>100</td>
+            <td>200</td>
+            <td>300</td>
+          </tr>
+          <!-- Segunda fila de datos -->
+          <tr>
+            <td>150</td>
+            <td>250</td>
+            <td>400</td>
+          </tr>
+          <!-- Tercera fila de datos -->
+          <tr>
+            <td>120</td>
+            <td>220</td>
+            <td>340</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <thead>
+          <!-- Primer encabezado que ocupa 3 columnas -->
+          <tr>
+            <th colspan="3">FOTOGRAFIA</th>
+            <th rowspan="2">OBSERVACIONES</th>
+          </tr>
+          <!-- Segundo encabezado con 3 columnas -->
+          <tr>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Primera fila de datos -->
+          <tr>
+            <td>100</td>
+            <td>200</td>
+            <td>300</td>
+            <td>EN PERFORACION</td>
+          </tr>
+          <!-- Segunda fila de datos -->
+          <tr>
+            <td>150</td>
+            <td>250</td>
+            <td>400</td>
+            <td>EN PERFORACION</td>
+          </tr>
+          <!-- Tercera fila de datos -->
+          <tr>
+            <td>120</td>
+            <td>220</td>
+            <td>340</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </td>
+
+  </tr>
+  </tbody>
   </table>
 
-  <h2>Trabajos Realizados</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Actividad</th>
-        <th>Detalles</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Validación de sondajes</td>
-        <td>En proceso de perforación</td>
-      </tr>
-      <tr>
-        <td>Traslado de cajas</td>
-        <td>A sala de corte</td>
-      </tr>
-      <tr>
-        <td>Ingreso de información</td>
-        <td>A base de datos</td>
-      </tr>
-      <tr>
-        <td>Envío de muestras</td>
-        <td>Al laboratorio</td>
-      </tr>
-    </tbody>
-  </table>
 
-  <footer>
-    <p><strong>Supervisor:</strong> Hugo Macaya Cayo</p>
-    <p><strong>Proyecto:</strong> El Zorro (2024)</p>
-    <p><strong>Email:</strong> hugo.macaya@tesorogold.com.au</p>
-  </footer>
+
+
+
+  <h2>4.Se retoma corte de testigo del sondaje ZDDH00351-A, 1 trabajador de la empresa ANSAN PERFORACIONES para dicho
+    trabajo.</h2>
+  <h2>5.Se retoma corte de testigo del sondaje ZDDH00357, 1 trabajador de la empresa NGENIERIA Y SERVICIO.</h2>
+  <h2>6.Muestreo de sondaje, pesado y almacenamiento de muestras, rotulado, traslado y acopio de cajas con sondajes en
+    patio, pozo ZDDH00351-A es realizado por Muestreros y asistente de geólogo.</h2>
+  <h2>7.Base de datos queda actualizada con todos los parámetros básicos y fotografías de los sondajes que se encuentran
+    en perforación, ZDDH00356 y ZDDH00358.<h2>
+      <h2>8.Se realiza envío de muestras al laboratorio químico ALS Copiapó, detalles adjuntos.</h2>
+      <h2>9.se prepara material para dar continuidad al muestreo de sondajes.</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Charla de 5 minutos</td>
+            <td>Dictada por Supervisor Hugo Macaya</td>
+          </tr> 
+        </tbody>
+      </table>
+
+      <h2>Trabajos Realizados</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Actividad</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Validación de sondajes</td>
+            <td>En proceso de perforación</td>
+          </tr>
+          <tr>
+            <td>Traslado de cajas</td>
+            <td>A sala de corte</td>
+          </tr>
+          <tr>
+            <td>Ingreso de información</td>
+            <td>A base de datos</td>
+          </tr>
+          <tr>
+            <td>Envío de muestras</td>
+            <td>Al laboratorio</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <footer>
+        <p><strong>Supervisor:</strong> Hugo Macaya Cayo</p>
+        <p><strong>Proyecto:</strong> El Zorro (2024)</p>
+        <p><strong>Email:</strong> hugo.macaya@tesorogold.com.au</p>
+      </footer>
 </body>
+
 </html>
+
+
+<table>
+  <thead>
+    <tr>
+
+      <td>Average average expressed expression</td>
+    </tr>
+    <tr>
+
+      <td>VARVE CHARACTER INFORMATION 2024</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Total cases</td>
+      <td>1000</td>
+      <td>10001</td>
+    </tr>
+    <tr>
+      <td>Total cases</td>
+      <td>1000</td>
+      <td>10001</td>
+    </tr>
+  </tbody>
+</table>
