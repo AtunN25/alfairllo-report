@@ -5,11 +5,20 @@ import { useState } from 'react';
 
 function page() {
     const [loading, setLoading] = useState(false);
+    const [projectId, setProjectId] = useState('');
 
   const handleDownloadPDF = async () => {
+
+    if (!projectId) {
+      alert('Por favor, ingresa un ID de proyecto.');
+      return;
+    }
+
+
     setLoading(true);
     try {
-      const response = await fetch('/api/pdf');
+      console.log(projectId)
+      const response = await fetch(`/api/pdf?project_id=${projectId}`);
       const blob = await response.blob();
 
       // Crear un enlace temporal para descargar el PDF
@@ -28,6 +37,12 @@ function page() {
   return (
     <div>
       <h1>Generar Reporte PDF</h1>
+      <input
+        type="text"
+        placeholder="ID del Proyecto"
+        value={projectId}
+        onChange={(e) => setProjectId(e.target.value)}
+      />
       <button onClick={handleDownloadPDF} disabled={loading}>
         {loading ? 'Generando PDF...' : 'Descargar PDF'}
       </button>
