@@ -11,127 +11,120 @@ interface ProjectData {
     name: string;
     reports: {
       id: number;
-      date: string;
-      overseer: string;
-      email: string;
+      date: string ;
+      overseer: string ;
+      email: string ;
       safety_talks: {
         id: number;
-        speaker: string;
-        time: string;
+        speaker: string ;
+        time: string ;
         subtitles: {
           id: number;
-          subtitle: string;
+          subtitle: string ;
         }[];
       }[];
       daily_activities: {
         id: number;
-        title: string;
-        picture: string;
+        title: string ;
+        picture: string ;
         points: {
           id: number;
-          description: string;
+          description: string ;
         }[];
       }[];
     }[];
   };
   wells: {
     id: number;
-    name: string;
-    date: string;
-    observations: string;
+    name: string | null;
+    date: string | null;
+    observations: string | null;
     company: {
       id: number;
-      name: string;
+      name: string | null;
     };
     receptions: {
       id: number;
-      from: number;
-      to: number;
+      from: number | null;
+      to: number | null;
       photographs: {
         id: number;
-        from: number;
-        to: number;
+        from: number | null;
+        to: number | null;
       }[];
       regularized: {
         id: number;
-        from: number;
-        to: number;
+        from: number | null;
+        to: number | null;
       }[];
       rqd: {
         id: number;
-        from: number;
-        to: number;
+        from: number | null;
+        to: number | null;
       }[];
       susceptibility: {
         id: number;
-        from: number;
-        to: number;
+        from: number | null;
+        to: number | null;
       }[];
       test_tubes_meters: {
         id: number;
-        from: number;
-        to: number;
-        from_meters: number;
-        to_meters: number;
+        from: number | null;
+        to: number | null;
+        from_meters: number | null;
+        to_meters: number | null;
       }[];
     }[];
     loggeo: {
       id: number;
-      date: string;
-      from: number;
-      to: number;
+      date: string | null;
+      from: number | null;
+      to: number | null;
     }[];
     cut: {
       id: number;
-      date: string;
-      from: number;
-      to: number;
-      uncut_meters: number;
-      observation: string;
+      date: string | null;
+      from: number | null;
+      to: number | null;
+      uncut_meters: number | null;
+      observation: string | null;
     }[];
     sampling_surveys: {
       id: number;
-      date: string;
-      from: number;
-      to: number;
-      unsampled_meters: number;
+      date: string | null;
+      from: number | null;
+      to: number | null;
+      unsampled_meters: number | null;
     }[];
     lab_shipments: {
       id: number;
-      laboratory_name: string;
-      status: string;
+      laboratory_name: string | null;
+      status: string | null;
       sample_shipments: {
         id: number;
-        date: string;
-        trc: string;
-        trc_from: number;
-        trc_to: number;
-        meters_from: number;
-        meters_to: number;
-        observation: string;
-        status: string;
+        date: string | null;
+        trc: string | null;
+        trc_from: number | null;
+        trc_to: number | null;
+        meters_from: number | null;
+        meters_to: number | null;
+        observation: string | null;
+        status: string | null;
       }[];
     }[];
   }[];
 }
 
 
+
 function populateTemplate(html: string, data: ProjectData): string {
   console.log("📌 Data recibida:", JSON.stringify(data, null, 2));
 
-  // Extraer la fecha del primer reporte (si existe)
+  // Extraer datos generales
   const reportDate = data.project.reports.length > 0 ? data.project.reports[0].date : "Fecha no disponible";
-
-  // Extraer el nombre del supervisor del primer reporte (si existe)
   const overseer = data.project.reports.length > 0 ? data.project.reports[0].overseer : "Supervisor no disponible";
-
-  // Extraer el correo electrónico del primer reporte (si existe)
   const email = data.project.reports.length > 0 ? data.project.reports[0].email : "Correo no disponible";
-
-  // Extraer el nombre del proyecto
   const projectName = data.project.name || "Nombre no disponible";
-
-  // Extraer el año de la fecha del primer reporte (si existe)
   const year = reportDate ? new Date(reportDate).getFullYear() : "Año no disponible";
 
   // Reemplazar placeholders generales
@@ -207,6 +200,104 @@ function populateTemplate(html: string, data: ProjectData): string {
   } else {
     // Si no hay actividades diarias, mostrar un mensaje
     populatedHtml = populatedHtml.replace("{{daily_activities}}", "<p>No hay actividades diarias disponibles</p>");
+  }
+
+  // Generar dinámicamente las tablas de pozos
+  if (data.wells && data.wells.length > 0) {
+    let wellsHtml = `
+
+      <table border="1">
+        <thead>
+          <tr>
+            <th>EMPRESA</th>
+            <th>FECHA</th>
+            <th>POZO</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.wells.map(well => `
+            <tr>
+              <td>${well.company.name}</td>
+              <td>${well.date}</td>
+              <td>${well.name}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+
+      <table border="1">
+        <thead>
+          <tr>
+            <th colspan="3">LOGGEO / MTS LIBERADO</th>
+          </tr>
+          <tr>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.wells.flatMap(well => (well.loggeo ?? []).map(log => `
+            <tr>
+              <td>${log.from}</td>
+              <td>${log.to}</td>
+              <td>${(log.to ?? 0) - (log.from ?? 0)}</td>
+            </tr>
+          `)).join("")}
+        </tbody>
+      </table>
+
+      <table border="1">
+        <thead>
+          <tr>
+            <th colspan="3">CORTE</th>
+          </tr>
+          <tr>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.wells.flatMap(well => (well.cut ?? []).map(cut => `
+            <tr>
+              <td>${cut.from}</td>
+              <td>${cut.to}</td>
+              <td>${(cut.to ?? 0) - (cut.from ?? 0)}</td>
+            </tr>
+          `)).join("")}
+        </tbody>
+      </table>
+
+      <table border="1">
+        <thead>
+          <tr>
+            <th colspan="3">MUESTREO</th>
+          </tr>
+          <tr>
+            <th>DESDE</th>
+            <th>HASTA</th>
+            <th>TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.wells.flatMap(well => (well.sampling_surveys ?? []).map(survey => `
+            <tr>
+              <td>${survey.from}</td>
+              <td>${survey.to}</td>
+              <td>${(survey.to ?? 0) - (survey.from ?? 0)}</td>
+            </tr>
+          `)).join("")}
+        </tbody>
+      </table>
+      
+    `;
+
+    // Reemplazar el placeholder {{wells_tables}} con las tablas generadas
+    populatedHtml = populatedHtml.replace("{{wells_tables}}", wellsHtml);
+  } else {
+    // Si no hay pozos, mostrar un mensaje
+    populatedHtml = populatedHtml.replace("{{wells_tables}}", "<p>No hay datos de pozos disponibles</p>");
   }
 
   return populatedHtml;
