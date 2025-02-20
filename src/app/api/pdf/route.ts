@@ -119,7 +119,29 @@ interface ProjectData {
 function populateTemplate(html: string, data: ProjectData): string {
   console.log("📌 Data recibida:", JSON.stringify(data, null, 2));
 
-  let populatedHtml = html.replace("{{project_name}}", data.project.name || "Nombre no disponible");
+  // Extraer la fecha del primer reporte (si existe)
+  const reportDate = data.project.reports.length > 0 ? data.project.reports[0].date : "Fecha no disponible";
+
+  // Extraer el nombre del supervisor del primer reporte (si existe)
+  const overseer = data.project.reports.length > 0 ? data.project.reports[0].overseer : "Supervisor no disponible";
+
+  // Extraer el correo electrónico del primer reporte (si existe)
+  const email = data.project.reports.length > 0 ? data.project.reports[0].email : "Correo no disponible";
+
+  // Extraer el nombre del proyecto
+  const projectName = data.project.name || "Nombre no disponible";
+
+  // Extraer el año de la fecha del primer reporte (si existe)
+  const year = reportDate ? new Date(reportDate).getFullYear() : "Año no disponible";
+
+  // Reemplazar placeholders generales
+  let populatedHtml = html
+    .replace("{{project_name}}", projectName)
+    .replace("{{date}}", reportDate)
+    .replace("{{Overseer}}", overseer)
+    .replace("{{name}}", projectName)
+    .replace("{{Date.Year}}", year.toString())
+    .replace("{{email}}", email);
 
   // Extraer actividades diarias y charlas de seguridad desde reports
   const dailyActivities = data.project.reports.flatMap(report => report.daily_activities || []);
@@ -162,41 +184,33 @@ function populateTemplate(html: string, data: ProjectData): string {
       .replace('<ol type="A">{{subtitles}}</ol>', '<ol type="A">No hay charlas de seguridad disponibles</ol>');
   }
 
-  // Reemplazar actividades diarias
+  // Generar dinámicamente la lista de actividades diarias
   if (dailyActivities.length > 0) {
-    dailyActivities.forEach((activity, index) => {
-      // Reemplazar el título de la actividad
-      populatedHtml = populatedHtml.replace(`{{daily_activity_${index}}}`, activity.title);
+    let activitiesHtml = "";
 
-      // Generar dinámicamente la lista de puntos (points)
+    dailyActivities.forEach((activity, index) => {
+      // Agregar el título de la actividad como un elemento de lista numerada
+      activitiesHtml += `<h3>${index + 1}. ${activity.title}</h3>`;
+
+      // Si hay puntos, generar una lista de descripciones
       if (activity.points && activity.points.length > 0) {
         const pointsList = activity.points
           .map(point => `<li>${point.description}</li>`)
           .join(""); // Convertir el array de <li> en un string
 
-        // Reemplazar el placeholder {{points_X}} con la lista generada
-        populatedHtml = populatedHtml.replace(
-          `<ul>{{points_${index}}}</ul>`,
-          `<ul>${pointsList}</ul>`
-        );
-      } else {
-        // Si no hay puntos, mostrar un mensaje
-        populatedHtml = populatedHtml.replace(
-          `<ul>{{points_${index}}}</ul>`,
-          `<ul>No hay puntos disponibles</ul>`
-        );
+        activitiesHtml += `<ul>${pointsList}</ul>`;
       }
     });
+
+    // Reemplazar el placeholder {{daily_activities}} con la lista generada
+    populatedHtml = populatedHtml.replace("{{daily_activities}}", activitiesHtml);
   } else {
     // Si no hay actividades diarias, mostrar un mensaje
-    populatedHtml = populatedHtml.replace(/{{daily_activity_\d+}}/g, "No hay actividades diarias disponibles");
-    populatedHtml = populatedHtml.replace(/<ul>{{points_\d+}}<\/ul>/g, "<ul>No hay puntos disponibles</ul>");
+    populatedHtml = populatedHtml.replace("{{daily_activities}}", "<p>No hay actividades diarias disponibles</p>");
   }
 
   return populatedHtml;
 }
-
-
 
 
 export async function GET(req: Request) {
