@@ -11,25 +11,25 @@ interface ProjectData {
     name: string;
     reports: {
       id: number;
-      date: string ;
-      overseer: string ;
-      email: string ;
+      date: string;
+      overseer: string;
+      email: string;
       safety_talks: {
         id: number;
-        speaker: string ;
-        time: string ;
+        speaker: string;
+        time: string;
         subtitles: {
           id: number;
-          subtitle: string ;
+          subtitle: string;
         }[];
       }[];
       daily_activities: {
         id: number;
-        title: string ;
-        picture: string ;
+        title: string;
+        picture: string;
         points: {
           id: number;
-          description: string ;
+          description: string;
         }[];
       }[];
     }[];
@@ -206,15 +206,29 @@ function populateTemplate(html: string, data: ProjectData): string {
   if (data.wells && data.wells.length > 0) {
     let wellsHtml = `
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th>EMPRESA</th>
-            <th>FECHA</th>
-            <th>POZO</th>
-          </tr>
-        </thead>
-        <tbody>
+
+    <table border="1">
+  <thead>
+    <tr>
+      <!-- Encabezados principales -->
+      <th>METROS DE SONDAJE DDH LIBERADOS POR GEOLOGIA</th>
+      <th>AVANCES EN CORTE Y MUESTREO DE SONSAJES DDH</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <!-- Primera celda con las dos tablas dentro -->
+      <td>
+        <div style="display: flex; flex-direction: row;">
+          <table>
+            <thead>
+              <tr>
+                <th>EMPRESA</th>
+                <th>FECHA</th>
+                <th>POZOS</th>
+              </tr>
+            </thead>
+           <tbody>
           ${data.wells.map(well => `
             <tr>
               <td>${well.company.name}</td>
@@ -223,42 +237,69 @@ function populateTemplate(html: string, data: ProjectData): string {
             </tr>
           `).join("")}
         </tbody>
-      </table>
+          </table>
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th colspan="3">LOGGEO / MTS LIBERADO</th>
-          </tr>
-          <tr>
-            <th>DESDE</th>
-            <th>HASTA</th>
-            <th>TOTAL</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${data.wells.flatMap(well => (well.loggeo ?? []).map(log => `
+          <br> <!-- Espacio entre tablas -->
+
+          <table border="1">
+            <thead>
+              <tr>
+                <th colspan="3">LOGGEO / MTS LIBERADO</th>
+              </tr>
+              <tr>
+                <th>DESDE</th>
+                <th>HASTA</th>
+                <th>TOTAL</th>
+              </tr>
+            </thead>
+             ${data.wells.flatMap(well => (well.loggeo ?? []).map(log => `
             <tr>
               <td>${log.from}</td>
               <td>${log.to}</td>
               <td>${(log.to ?? 0) - (log.from ?? 0)}</td>
             </tr>
           `)).join("")}
-        </tbody>
-      </table>
+          </table>
+        </div>
+      </td>
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th colspan="3">CORTE</th>
-          </tr>
-          <tr>
-            <th>DESDE</th>
-            <th>HASTA</th>
-            <th>TOTAL</th>
-          </tr>
-        </thead>
-        <tbody>
+      <!-- Segunda celda vacía (o puedes agregar contenido) -->
+      <td>
+        <div style="display: flex; flex-direction: row;">
+          <table>
+            <thead>
+              <tr>
+                <th>EMPRESA</th>
+                <th>FECHA</th>
+                <th>POZOS</th>
+              </tr>
+
+            </thead>
+            <tbody>
+            ${data.wells.map(well => `
+              <tr>
+                <td>${well.company.name}</td>
+                <td>${well.date}</td>
+                <td>${well.name}</td>
+              </tr>
+            `).join("")}
+            </tbody>
+          </table>
+
+          <br> <!-- Espacio entre tablas -->
+
+          <table border="1">
+            <thead>
+              <tr>
+                <th colspan="3">CUT</th>
+              </tr>
+              <tr>
+                <th>DESDE</th>
+                <th>HASTA</th>
+                <th>TOTAL</th>
+              </tr>
+            </thead>
+             <tbody>
           ${data.wells.flatMap(well => (well.cut ?? []).map(cut => `
             <tr>
               <td>${cut.from}</td>
@@ -267,20 +308,59 @@ function populateTemplate(html: string, data: ProjectData): string {
             </tr>
           `)).join("")}
         </tbody>
-      </table>
+          </table>
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th colspan="3">MUESTREO</th>
-          </tr>
-          <tr>
-            <th>DESDE</th>
-            <th>HASTA</th>
-            <th>TOTAL</th>
-          </tr>
-        </thead>
-        <tbody>
+          <br> <!-- Espacio entre tablas -->
+
+          <table>
+            <thead>
+              <tr>
+                <th>METROSS SIN CORTAR</th>
+                <th>OBSERVACION</th>
+              </tr>
+
+            </thead>
+            <tbody>
+            ${data.wells.flatMap(well => (well.cut ?? []).map(cut => `
+              <tr>
+                <td>${cut.uncut_meters}</td>
+                <td>${cut.observation}</td>
+              </tr>
+            `)).join("")}
+            </tbody>
+          </table>
+
+          <br> <!-- celeste -->
+          <table>
+            <thead>
+              <tr>
+                <th>EMPRESA</th>
+                <th>FECHA</th>
+              </tr>
+
+            </thead>
+            <tbody>
+              ${data.wells.map(well => `
+              <tr>
+                <td>${well.company.name}</td>
+                <td>${well.date}</td>
+              </tr>
+            `).join("")}
+            </tbody>
+          </table>
+
+          <table border="1">
+            <thead>
+              <tr>
+                <th colspan="3">MUESTREO</th>
+              </tr>
+              <tr>
+                <th>DESDE</th>
+                <th>HASTA</th>
+                <th>TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
           ${data.wells.flatMap(well => (well.sampling_surveys ?? []).map(survey => `
             <tr>
               <td>${survey.from}</td>
@@ -289,8 +369,30 @@ function populateTemplate(html: string, data: ProjectData): string {
             </tr>
           `)).join("")}
         </tbody>
-      </table>
-      
+          </table>
+
+          <table>
+            <thead>
+              <tr>
+                <th>METROS SIN MUESTREAR</th>
+              </tr>
+            </thead>
+            <tbody>
+            ${data.wells.flatMap(well => (well.sampling_surveys ?? []).map(survey => `
+              <tr>
+                <td>${survey.unsampled_meters}</td>
+                
+              </tr>
+            `)).join("")}
+            </tbody>
+          </table>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
     `;
 
     // Reemplazar el placeholder {{wells_tables}} con las tablas generadas

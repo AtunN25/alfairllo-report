@@ -10,20 +10,62 @@
       margin: 0;
       padding: 20px;
     }
+
     h1 {
       text-align: center;
       color: #333;
     }
-    h3 {
-      margin-top: 20px;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8px;
+      /* Mantener el tamaño de la fuente pequeño */
     }
-    ul {
-      margin-left: 40px;
+
+    th,
+    td {
+      font-weight: normal;
+      padding: 4px;
+      /* Reducir el padding para que los textos estén más juntos */
+      border: 1px solid #ddd;
+      /* Mantener un borde delgado entre las celdas */
+      text-align: center;
+      /* Centrar el texto */
     }
-    div {
-      margin-top: 20px;
-      border-top: 1px solid #ccc;
-      padding-top: 10px;
+
+    thead {
+      border-top: none;
+      /* Eliminar el borde superior de los encabezados */
+    }
+
+
+
+    tbody {
+      display: table-row-group;
+    }
+
+    td {
+      vertical-align: top;
+      /* Alineación superior de las celdas */
+      padding-left: 2px;
+      /* Reduce el espacio en el lado izquierdo */
+      padding-right: 2px;
+      /* Reduce el espacio en el lado derecho */
+    }
+
+    /* Para hacer que las celdas no tengan márgenes adicionales */
+    table td,
+    table th {
+      margin: 0;
+      padding: 0;
+      /* Reducir al mínimo el padding */
+    }
+
+    .logo {
+      width: 100px;
+      height: auto;
+      float: right;
     }
   </style>
 </head>
@@ -60,7 +102,7 @@
               <tr>
                 <th>EMPRESA</th>
                 <th>FECHA</th>
-                <th>POZO</th>
+                <th>POZOS</th>
               </tr>
 
             </thead>
@@ -128,7 +170,7 @@
               <tr>
                 <th>EMPRESA</th>
                 <th>FECHA</th>
-                <th>POZO</th>
+                <th>POZOS</th>
               </tr>
 
             </thead>
@@ -156,7 +198,7 @@
           <table border="1">
             <thead>
               <tr>
-                <th colspan="3">LOGGEO / MTS LIBERADO</th>
+                <th colspan="3">CUT</th>
               </tr>
               <tr>
                 <th>DESDE</th>
@@ -191,8 +233,8 @@
           <table>
             <thead>
               <tr>
-                <th>EMPRESA</th>
-                <th>FECHA</th>
+                <th>METROSS SIN CORTAR</th>
+                <th>OBSERVACION</th>
               </tr>
 
             </thead>
@@ -244,7 +286,7 @@
           <table border="1">
             <thead>
               <tr>
-                <th colspan="3">LOGGEO / MTS LIBERADO</th>
+                <th colspan="3">MUESTREO</th>
               </tr>
               <tr>
                 <th>DESDE</th>
