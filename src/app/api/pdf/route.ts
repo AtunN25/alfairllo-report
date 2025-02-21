@@ -392,25 +392,7 @@ function populateTemplate(html: string, data: ProjectData): string {
 </table>
 
 
- <table>
-            <thead>
-              <tr>
-                <th>EMPRESA</th>
-                <th>FECHA</th>
-                <th>POZOS</th>
-              </tr>
-
-            </thead>
-            <tbody>
-            ${data.wells.map(well => `
-              <tr>
-                <td>${well.company.name}</td>
-                <td>${well.date}</td>
-                <td>${well.name}</td>
-              </tr>
-            `).join("")}
-            </tbody>
-          </table>
+ 
 
     `;
 
@@ -423,7 +405,7 @@ function populateTemplate(html: string, data: ProjectData): string {
 
    // Generar dinámicamente la tabla de laboratorios
    if (data.wells && data.wells.length > 0) {
-    let labHtml = `
+    const labHtml = `
       <div>
         <h3>LABORATORIO</h3>
         <div>
@@ -559,6 +541,292 @@ function populateTemplate(html: string, data: ProjectData): string {
     // Si no hay datos de laboratorio, mostrar un mensaje
     populatedHtml = populatedHtml.replace("{{lab_tables}}", "<p>No hay datos de laboratorio disponibles</p>");
   }
+
+    // Generar dinámicamente las tablas de recepciones
+    if (data.wells && data.wells.length > 0) {
+      const receptionsHtml = `
+        <table>
+          <thead>
+            <tr>
+              <!-- Primera columna: LOGO -->
+              <th rowspan="2">LOGO</th>
+
+              <!-- Columna del medio: Recepción Muestra de perforación -->
+              <th>Recepcion Muestra de perforacion</th>
+
+              <!-- Tercera columna: AVANCE DIARIO EN MUESTRA DGG 2024 -->
+              <th rowspan="2">AVANCE DIARIO EN MUESTRA DGG 2024</th>
+            </tr>
+            <tr>
+              <!-- Columna del medio: Turno día y noche -->
+              <th>Turno dia y noche</th>
+            </tr>
+          </thead>
+          <tbody style="padding: 0; border: none;">
+            <tr>
+              <!-- Celda del LOGO con tabla interna -->
+              <td style="padding: 0; border: none;">
+                <table>
+                  <thead style="height: 21px;">
+                    <tr>
+                      <th>EMPRESA</th>
+                      <th>FECHA</th>
+                      <th>POZO</th>
+                    </tr>
+
+                  </thead>
+                  <tbody>
+                  ${data.wells.map(well => `
+                    <tr>
+                      <td>${well.company.name}</td>
+                      <td>${well.date}</td>
+                      <td>${well.name}</td>
+                    </tr>
+                  `).join("")}
+                  </tbody>
+                </table>
+              </td>
+              <!-- Otras celdas -->
+              <td style="padding: 0; border: none;">
+                <table>
+                  <thead>
+                    <tr>
+                      <!-- Primera columna: LOGO -->
+                      <th rowspan="2" COLSPAN=2>Recepcion de muestra</th>
+
+                      <!-- Columna del medio: Recepción Muestra de perforación -->
+                      <th>MTS</th>
+
+                    </tr>
+                    <tr>
+                      <!-- Columna del medio: Turno día y noche -->
+                      <th>PERFORADOS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${data.wells
+                          .flatMap(well =>
+                            (well.receptions ?? []).flatMap(reception =>`
+                             
+                                <tr>
+                                  <td>${reception.from}</td>
+                                  <td>${reception.to}</td>
+                                  <td>${((reception.to?? 0) - (reception.from ?? 0)).toFixed(2)}</td>
+  
+                                </tr>
+                              
+                            `)
+                          )
+                          .join("")}
+                  </tbody>
+                </table>
+        </td>
+
+        <td style="padding: 0; border: none;">
+
+
+          <div style="display: flex; flex-direction: row;">
+            <table>
+              <thead>
+                <!-- Primer encabezado que ocupa 3 columnas -->
+                <tr>
+                  <th colspan="3">photographs</th>
+                </tr>
+                <!-- Segundo encabezado con 3 columnas -->
+                <tr>
+                  <th>DESDE</th>
+                  <th>HASTA</th>
+                  <th>TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
+              
+               ${data.wells
+                          .flatMap(well =>
+                            (well.receptions ?? []).flatMap(receptions =>
+                              (receptions.photographs ?? []).map(photograph => `
+                                <tr>
+                                  <td>${photograph.from}</td>
+                                  <td>${photograph.to}</td>
+                                  <td>${((photograph.to?? 0) - (photograph.from ?? 0)).toFixed(2)}</td>
+                          
+                                </tr>
+                              `)
+                            )
+                          )
+                          .join("")}
+              </tbody>
+            </table>
+
+            <table>
+              <thead>
+                <!-- Primer encabezado que ocupa 3 columnas -->
+                <tr>
+                  <th colspan="3">regularized</th>
+                </tr>
+                <!-- Segundo encabezado con 3 columnas -->
+                <tr>
+                  <th>DESDE</th>
+                  <th>HASTA</th>
+                  <th>TOTAL</th>
+                </tr>
+              </thead>
+               ${data.wells
+                          .flatMap(well =>
+                            (well.receptions ?? []).flatMap(receptions =>
+                              (receptions.regularized ?? []).map(regularized => `
+                                <tr>
+                                  <td>${regularized.from}</td>
+                                  <td>${regularized.to}</td>
+                                  <td>${((regularized.to?? 0) - (regularized.from ?? 0)).toFixed(2)}</td>
+                              
+                                </tr>
+                              `)
+                            )
+                          )
+                          .join("")}
+            </table>
+
+            <table>
+              <thead>
+                <!-- Primer encabezado que ocupa 3 columnas -->
+                <tr>
+                  <th colspan="3">rqd</th>
+                </tr>
+                <!-- Segundo encabezado con 3 columnas -->
+                <tr>
+                  <th>DESDE</th>
+                  <th>HASTA</th>
+                  <th>TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
+              ${data.wells
+                .flatMap(well =>
+                  (well.receptions ?? []).flatMap(receptions =>
+                    (receptions.rqd ?? []).map(rqd => `
+                      <tr>
+                        <td>${rqd.from}</td>
+                        <td>${rqd.to}</td>
+                        <td>${((rqd.to?? 0) - (rqd.from ?? 0)).toFixed(2)}</td>
+             
+                      </tr>
+                    `)
+                  )
+                )
+                .join("")}
+              </tbody>
+            </table>
+
+            <table>
+              <thead>
+                <!-- Primer encabezado que ocupa 3 columnas -->
+                <tr>
+                  <th colspan="3">susceptibility</th>
+                </tr>
+                <!-- Segundo encabezado con 3 columnas -->
+                <tr>
+                  <th>DESDE</th>
+                  <th>HASTA</th>
+                  <th>TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
+              ${data.wells
+                .flatMap(well =>
+                  (well.receptions ?? []).flatMap(receptions =>
+                    (receptions.susceptibility ?? []).map(susceptibility => `
+                      <tr>
+                        <td>${susceptibility.from}</td>
+                        <td>${susceptibility.to}</td>
+                        <td>${((susceptibility.to?? 0) - (susceptibility.from ?? 0)).toFixed(2)}</td>
+                    
+                      </tr>
+                    `)
+                  )
+                )
+                .join("")}
+              </tbody>
+            </table>
+
+            <table>
+              <thead>
+                <!-- Primer encabezado que ocupa 3 columnas -->
+                <tr>
+                  <th colspan="3">test_tubes_meters-provetas</th>
+                </tr>
+                <!-- Segundo encabezado con 3 columnas -->
+                <tr>
+                  <th>from</th>
+                  <th>to</th>
+                  <th>TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
+              ${data.wells
+                .flatMap(well =>
+                  (well.receptions ?? []).flatMap(receptions =>
+                    (receptions.test_tubes_meters ?? []).map(test_tubes_meters => `
+                      <tr>
+                        <td>${test_tubes_meters.from}</td>
+                        <td>${test_tubes_meters.to}</td>
+                        <td>${((test_tubes_meters.to?? 0) - (test_tubes_meters.from ?? 0)).toFixed(2)}</td>
+                
+                      </tr>
+                    `)
+                  )
+                )
+                .join("")}
+              </tbody>
+            </table>
+
+            <table>
+              <thead>
+                <!-- Primer encabezado que ocupa 3 columnas -->
+                <tr>
+                  <th colspan="3">test_tubes_meters-metros</th>
+                  <th rowspan="2">OBSERVACIONES</th>
+                </tr>
+                <!-- Segundo encabezado con 3 columnas -->
+                <tr>
+                  <th>from_meters</th>
+                  <th>to_meters</th>
+                  <th>TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
+              ${data.wells
+                .flatMap(well =>
+                  (well.receptions ?? []).flatMap(receptions =>
+                    (receptions.test_tubes_meters ?? []).map(test_tubes_meters => `
+                      <tr>
+                        <td>${test_tubes_meters.from_meters}</td>
+                        <td>${test_tubes_meters.to_meters}</td>
+                        <td>${((test_tubes_meters.to_meters ?? 0) - (test_tubes_meters.from_meters ?? 0)).toFixed(2)}</td>
+                        <td>${(well.observations)}</td>
+                      </tr>
+                    `)
+                  )
+                )
+                .join("")}
+              </tbody>
+            </table>
+
+          </div>
+        </td>
+
+        </tr>
+        </tbody>
+        </table>
+            `;
+          
+  
+      // Reemplazar el placeholder {{receptions_tables}} con las tablas generadas
+      populatedHtml = populatedHtml.replace("{{receptions_tables}}", receptionsHtml);
+    } else {
+      // Si no hay recepciones, mostrar un mensaje
+      populatedHtml = populatedHtml.replace("{{receptions_tables}}", "<p>No hay datos de recepciones disponibles</p>");
+    }
 
   return populatedHtml;
 }
