@@ -206,7 +206,6 @@ function populateTemplate(html: string, data: ProjectData): string {
   if (data.wells && data.wells.length > 0) {
     let wellsHtml = `
 
-
     <table border="1">
   <thead>
     <tr>
@@ -393,6 +392,26 @@ function populateTemplate(html: string, data: ProjectData): string {
 </table>
 
 
+ <table>
+            <thead>
+              <tr>
+                <th>EMPRESA</th>
+                <th>FECHA</th>
+                <th>POZOS</th>
+              </tr>
+
+            </thead>
+            <tbody>
+            ${data.wells.map(well => `
+              <tr>
+                <td>${well.company.name}</td>
+                <td>${well.date}</td>
+                <td>${well.name}</td>
+              </tr>
+            `).join("")}
+            </tbody>
+          </table>
+
     `;
 
     // Reemplazar el placeholder {{wells_tables}} con las tablas generadas
@@ -400,6 +419,145 @@ function populateTemplate(html: string, data: ProjectData): string {
   } else {
     // Si no hay pozos, mostrar un mensaje
     populatedHtml = populatedHtml.replace("{{wells_tables}}", "<p>No hay datos de pozos disponibles</p>");
+  }
+
+   // Generar dinámicamente la tabla de laboratorios
+   if (data.wells && data.wells.length > 0) {
+    let labHtml = `
+      <div>
+        <h3>LABORATORIO</h3>
+        <div>
+          <table border="1">
+            <thead>
+              <tr>
+                <th>ENVIO DE MUESTRAS DE SONDAJE AL LABORATORIO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div style="display: flex; flex-direction: row;">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>FECHA</th>
+                          <th>POZO</th>
+                          <th>TRC</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${data.wells
+                          .flatMap(well =>
+                            (well.lab_shipments ?? []).flatMap(shipment =>
+                              (shipment.sample_shipments ?? []).map(sample => `
+                                <tr>
+                                  <td>${sample.date}</td>
+                                  <td>${well.name}</td>
+                                  <td>${sample.trc}</td>
+                                </tr>
+                              `)
+                            )
+                          )
+                          .join("")}
+                      </tbody>
+                    </table>
+
+                    <br> <!-- Espacio entre tablas -->
+
+                    <table border="1">
+                      <thead>
+                        <tr>
+                          <th colspan="2">TRC</th>
+                        </tr>
+                        <tr>
+                          <th>DESDE</th>
+                          <th>HASTA</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${data.wells
+                          .flatMap(well =>
+                            (well.lab_shipments ?? []).flatMap(shipment =>
+                              (shipment.sample_shipments ?? []).map(sample => `
+                                <tr>
+                                  <td>${sample.trc_from}</td>
+                                  <td>${sample.trc_to}</td>
+                                </tr>
+                              `)
+                            )
+                          )
+                          .join("")}
+                      </tbody>
+                    </table>
+
+                    <br> <!-- Espacio entre tablas -->
+
+                    <table border="1">
+                      <thead>
+                        <tr>
+                          <th colspan="2">METROS</th>
+                        </tr>
+                        <tr>
+                          <th>DESDE</th>
+                          <th>HASTA</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${data.wells
+                          .flatMap(well =>
+                            (well.lab_shipments ?? []).flatMap(shipment =>
+                              (shipment.sample_shipments ?? []).map(sample => `
+                                <tr>
+                                  <td>${sample.meters_from}</td>
+                                  <td>${sample.meters_to}</td>
+                                </tr>
+                              `)
+                            )
+                          )
+                          .join("")}
+                      </tbody>
+                    </table>
+
+                    <br> <!-- Espacio entre tablas -->
+
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>TOTAL</th>
+                          <th>TOTAL</th>
+                          <th>OBSERVACION</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${data.wells
+                          .flatMap(well =>
+                            (well.lab_shipments ?? []).flatMap(shipment =>
+                              (shipment.sample_shipments ?? []).map(sample => `
+                                <tr>
+                                  <td> ${(sample.trc_to?? 0) - (sample.trc_from?? 0)}</td>
+                                  <td>${(sample.meters_to ?? 0) - (sample.meters_from ?? 0)}</td>
+                                  <td>${sample.observation}</td>
+                                </tr>
+                              `)
+                            )
+                          )
+                          .join("")}
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+
+    // Reemplazar el placeholder {{lab_tables}} con las tablas generadas
+    populatedHtml = populatedHtml.replace("{{lab_tables}}", labHtml);
+  } else {
+    // Si no hay datos de laboratorio, mostrar un mensaje
+    populatedHtml = populatedHtml.replace("{{lab_tables}}", "<p>No hay datos de laboratorio disponibles</p>");
   }
 
   return populatedHtml;
