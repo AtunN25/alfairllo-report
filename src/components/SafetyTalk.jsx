@@ -60,21 +60,21 @@ function SafetyTalk() {
           <p className="text-gray-700 text-base font-sans">
             Titulo
           </p>
-          <input class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Titulo"></input>
+          <input className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Titulo"></input>
         </div>
 
         <div>
           <p className="text-gray-700 text-base">
             Supervisor:
           </p>
-          <input class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Supervisor"></input>
+          <input className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Supervisor"></input>
         </div>
 
         <div>
           <p className="text-gray-700 text-base">
             Duracion:
           </p>
-          <input class="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Tiempo en minutos"></input>
+          <input className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow" placeholder="Tiempo en minutos"></input>
         </div>
 
         <div>
@@ -134,7 +134,7 @@ function SafetyTalk() {
           Submit Safety Talk
         </button>
 
-        <button class="bg-white hover:bg-slate-300  text-gray-800 font-semibold py-2 px-4 border border-slate-300 w-full rounded shadow">
+        <button className="bg-white hover:bg-slate-300  text-gray-800 font-semibold py-2 px-4 border border-slate-300 w-full rounded shadow">
           Enviar Datos
         </button>
       </form>

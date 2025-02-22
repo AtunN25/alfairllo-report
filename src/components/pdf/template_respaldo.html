@@ -993,3 +993,15 @@
 
     </div>
   </div>
+
+
+  ${data.wells
+    .flatMap(well =>
+      (well.receptions ?? []).map(reception => `
+        <tr>
+          <td>${reception?.from ?? "null"}</td>
+          <td>${reception?.to ?? "null"}</td>
+        </tr>
+      `)
+    )
+    .join("")}
