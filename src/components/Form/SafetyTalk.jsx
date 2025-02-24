@@ -40,7 +40,7 @@ function SafetyTalk() {
                     Muy buenas ... A continuación ingrese los datos generales respecto a la Jornada de Charla
                 </p>
             </div>
-            <div className="px-6 pt-4 pb-2">
+            <div className="px-6 pt-4 pb-4">
 
                 <form>
                     <div>

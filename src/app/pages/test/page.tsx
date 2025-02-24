@@ -3,8 +3,8 @@ import Project from '@/components/Form/Project'
 //import SafetyTalk from '@/components/SafetyTalk'
 import Activities from '@/components/Form/Activities'
 import SafetyTalk from '@/components/Form/SafetyTalk'
-
-
+import Tables from '@/components/Form/Tables'
+import Reception from '@/components/Form/Reception'
 
 function page() {
     return (
@@ -17,10 +17,15 @@ function page() {
            
             <div className='flex-col '>
                 <Activities></Activities>
-                
             </div>
          
-           
+            <div className='flex-col space-y-5'>
+                <Tables></Tables>
+
+                <Reception></Reception>
+            </div>
+
+      
 
         </div>
     )
