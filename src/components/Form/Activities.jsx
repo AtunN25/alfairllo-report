@@ -73,6 +73,13 @@ function Activities() {
         }
     };
 
+    // Función para manejar el clic en "Eliminar actividad"
+    const handleDeleteActivity = (id) => {
+        // Eliminar el input correspondiente
+        const updatedInputs = activityInputs.filter((input) => input.id !== id);
+        setActivityInputs(updatedInputs);
+    };
+
     return (
         <div className="cartadiv">
             <div className="px-6 py-4">
@@ -108,12 +115,20 @@ function Activities() {
                             placeholder="Ingrese el título de la actividad"
                             className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         />
-                        <button
-                            onClick={() => handleConfirmActivity(input.id)}
-                            className="mt-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 ease"
-                        >
-                            Confirmar actividad
-                        </button>
+                        <div className="flex gap-2 mt-2">
+                            <button
+                                onClick={() => handleConfirmActivity(input.id)}
+                                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 ease"
+                            >
+                                Confirmar 
+                            </button>
+                            <button
+                                onClick={() => handleDeleteActivity(input.id)}
+                                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 ease"
+                            >
+                                Eliminar
+                            </button>
+                        </div>
                     </div>
                 ))}
 
