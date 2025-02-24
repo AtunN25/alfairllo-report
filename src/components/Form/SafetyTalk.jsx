@@ -2,6 +2,11 @@
 import React, { useState } from 'react';
 
 function SafetyTalk() {
+    // Estado para los datos estáticos
+    const [staticData, setStaticData] = useState({
+        speaker: "",
+        time: ""
+    });
 
     // Estado para almacenar los inputs de actividad
     const [activityInputs, setActivityInputs] = useState([]);
@@ -9,10 +14,15 @@ function SafetyTalk() {
     // Estado para almacenar las actividades confirmadas
     const [actividades, setActividades] = useState([]);
 
+    // Contador para IDs (comienza desde 1)
+    const [idCounter, setIdCounter] = useState(1);
+
     // Función para manejar el clic en "Agregar actividad"
     const handleAddActivity = () => {
-        // Agregar un nuevo input al estado
-        setActivityInputs([...activityInputs, { id: Date.now(), value: '' }]);
+        // Agregar un nuevo input al estado con un ID secuencial
+        setActivityInputs([...activityInputs, { id: idCounter, value: '' }]);
+        // Incrementar el contador de IDs
+        setIdCounter(idCounter + 1);
     };
 
     // Función para manejar el cambio en el input
@@ -23,7 +33,6 @@ function SafetyTalk() {
         setActivityInputs(updatedInputs);
     };
 
-
     // Función para manejar el clic en "Eliminar actividad"
     const handleDeleteActivity = (id) => {
         // Eliminar el input correspondiente
@@ -31,9 +40,57 @@ function SafetyTalk() {
         setActivityInputs(updatedInputs);
     };
 
+    // Función para manejar el clic en "Confirmar actividad"
+    const handleConfirmActivity = (id) => {
+        const input = activityInputs.find((input) => input.id === id);
+        if (input && input.value.trim() !== "") {
+            setActividades([...actividades, { id: input.id, subtitle: input.value }]);
+            handleDeleteActivity(id); // Elimina el input después de confirmar
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Crear un objeto con los datos del formulario
+        const formData = {
+            safety_talks: [
+                {
+                    speaker: staticData.speaker,
+                    time: staticData.time,
+                    subtitles: actividades
+                }
+            ]
+        };
+
+        console.log(JSON.stringify(formData, null, 2));
+
+        /*try {
+            const response = await fetch('http://localhost:3000/api/report', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify(formData) 
+            });
+
+            const data = await response.json(); 
+
+            if (response.ok) {
+                alert(`Reporte enviado exitosamente. ID del reporte: ${data.report_id}`);
+                setReportId(data.report_id); // Guardar el report_id en el estado
+                localStorage.setItem('report_id', data.report_id);
+            } else {
+                alert('Error al enviar el reporte');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al enviar el reporte');
+        }*/
+    };
+
     return (
         <div className="cartadiv">
-
             <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">Jornada de charlas</div>
                 <p className="text-gray-700 text-base">
@@ -41,37 +98,44 @@ function SafetyTalk() {
                 </p>
             </div>
             <div className="px-6 pt-4 pb-4">
-
-                <form>
+                <form onSubmit={handleSubmit}>
+                    {/* Input para el supervisor */}
                     <div>
                         <p className="text-gray-700 text-base">Personal Supervisor:</p>
                         <input
                             className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                             placeholder="Supervisor"
-                            name="overseer" // Importante: el atributo "name"
+                            name="speaker"
+                            value={staticData.speaker}
+                            onChange={(e) => setStaticData({ ...staticData, speaker: e.target.value })}
                             required
                         />
                     </div>
 
+                    {/* Input para el tiempo de duración */}
                     <div>
-                        <p className="text-gray-700 text-base">Tiempo de duracion:</p>
+                        <p className="text-gray-700 text-base">Tiempo de duración:</p>
                         <input
                             className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                            placeholder="Email del Supervisor"
-                            name="duracion" // Importante: el atributo "name"
+                            placeholder="Tiempo de duración"
+                            name="time"
+                            value={staticData.time}
+                            onChange={(e) => setStaticData({ ...staticData, time: e.target.value })}
                             required
-                            type='number'
+                            type="text"
                         />
                     </div>
 
+                    {/* Botón para agregar subtítulos */}
                     <button
+                        type="button"
                         onClick={handleAddActivity}
-                        className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 ease"
+                        className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 ease mt-4"
                     >
-                        Agregar subtitulo 
+                        Agregar subtítulo
                     </button>
 
-                    {/* Inputs para agregar actividades */}
+                    {/* Inputs para subtítulos dinámicos */}
                     {activityInputs.map((input) => (
                         <div key={input.id} className="mt-4">
                             <input
@@ -83,12 +147,14 @@ function SafetyTalk() {
                             />
                             <div className="flex gap-2 mt-2">
                                 <button
+                                    type="button"
                                     onClick={() => handleConfirmActivity(input.id)}
                                     className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 ease"
                                 >
                                     Confirmar
                                 </button>
                                 <button
+                                    type="button"
                                     onClick={() => handleDeleteActivity(input.id)}
                                     className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 ease"
                                 >
@@ -103,25 +169,26 @@ function SafetyTalk() {
                         <div className="mt-4">
                             <h3 className="font-bold text-lg mb-2">Actividades confirmadas:</h3>
                             <ul>
-                                {actividades.map((actividad, index) => (
-                                    <li key={index} className="text-gray-700">
-                                        {actividad.title}
+                                {actividades.map((actividad) => (
+                                    <li key={actividad.id} className="text-gray-700">
+                                        {actividad.subtitle}
                                     </li>
                                 ))}
                             </ul>
                         </div>
                     )}
 
+                    {/* Botón para enviar el formulario */}
                     <button
                         type="submit"
-                        className="mt-4  bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease"
+                        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease"
                     >
                         Enviar Datos de la Charla
                     </button>
                 </form>
             </div>
         </div>
-    )
+    );
 }
 
-export default SafetyTalk
+export default SafetyTalk;

@@ -8,6 +8,16 @@ function Activities() {
     // Estado para almacenar las actividades confirmadas
     const [actividades, setActividades] = useState([]);
 
+    // Estado para manejar el archivo seleccionado
+    const [file, setFile] = useState(null);
+
+    // Función para manejar el cambio en el archivo seleccionado
+    const handleFileChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]); // Actualiza el estado con el archivo seleccionado
+        }
+    };
+
     // Función para manejar el clic en "Agregar actividad"
     const handleAddActivity = () => {
         // Agregar un nuevo input al estado
@@ -23,7 +33,7 @@ function Activities() {
     };
 
     // Función para manejar el clic en "Confirmar actividad"
-    const handleConfirmActivity = async (id) => {
+    const handleConfirmActivity = (id) => {
         // Obtener el input correspondiente
         const input = activityInputs.find((input) => input.id === id);
 
@@ -32,46 +42,21 @@ function Activities() {
             return;
         }
 
-        // Obtener el report_id del localStorage
-        const reportId = localStorage.getItem('report_id');
-
-        if (!reportId) {
-            alert('No se encontró el ID del reporte. Por favor, cree un reporte primero.');
-            return;
-        }
-
-        // Crear el objeto de la actividad
+        // Crear el objeto de la actividad con los subtítulos confirmados
         const nuevaActividad = {
             title: input.value,
-            picture: 'nada', // Valor predeterminado
-            report_id: parseInt(reportId), // Convertir a número
-            subactivities: input.subactivities.filter((sub) => sub.confirmed) // Solo subactividades confirmadas
+            picture: file ? file.name : 'No se seleccionó archivo', // Nombre del archivo o mensaje
+            subtitles: input.subactivities
+                .filter((sub) => sub.confirmed) // Solo subactividades confirmadas
+                .map((sub) => ({ subtitle: sub.value })) // Mapear a la estructura deseada
         };
 
-        try {
-            // Enviar la actividad al backend
-            const response = await fetch('http://localhost:3000/api/daily-activities', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(nuevaActividad)
-            });
+        // Agregar la actividad al estado de actividades confirmadas
+        setActividades([...actividades, nuevaActividad]);
 
-            if (response.ok) {
-                alert('Actividad agregada exitosamente');
-                setActividades([...actividades, nuevaActividad]); // Agregar la actividad al estado
-
-                // Eliminar el input confirmado
-                const updatedInputs = activityInputs.filter((input) => input.id !== id);
-                setActivityInputs(updatedInputs);
-            } else {
-                alert('Error al agregar la actividad');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error al agregar la actividad');
-        }
+        // Eliminar el input confirmado
+        const updatedInputs = activityInputs.filter((input) => input.id !== id);
+        setActivityInputs(updatedInputs);
     };
 
     // Función para manejar el clic en "Eliminar actividad"
@@ -134,6 +119,19 @@ function Activities() {
         setActivityInputs(updatedInputs);
     };
 
+    // Función para mostrar todos los datos en un JSON
+    const handleShowData = () => {
+        const data = {
+            actividades: actividades.map((actividad) => ({
+                title: actividad.title,
+                picture: actividad.picture,
+                subtitles: actividad.subtitles // Aquí están los subtítulos
+            }))
+        };
+
+        console.log(JSON.stringify(data, null, 2)); // Mostrar el JSON en la consola
+    };
+
     return (
         <div className="cartadiv">
             <div className="px-6 py-4">
@@ -143,12 +141,13 @@ function Activities() {
                 </p>
             </div>
             <div className="px-6 pt-4 pb-4 space-y-4">
-
+                {/* Input para seleccionar archivo */}
                 <input
                     type="file"
-                    placeholder="Ingrese la foto de la actividad"
-                    className="w-full  bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                    onChange={handleFileChange}
+                    className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                 />
+
                 {/* Botón "No registro ninguna actividad" */}
                 <button
                     onClick={() => alert('No se registró ninguna actividad')}
@@ -234,12 +233,12 @@ function Activities() {
                         <ul>
                             {actividades.map((actividad, index) => (
                                 <li key={index} className="text-gray-700">
-                                    {actividad.title}
-                                    {actividad.subactivities.length > 0 && (
+                                    {actividad.title} (Archivo: {actividad.picture})
+                                    {actividad.subtitles.length > 0 && (
                                         <ul className="ml-4">
-                                            {actividad.subactivities.map((sub, subIndex) => (
+                                            {actividad.subtitles.map((sub, subIndex) => (
                                                 <li key={subIndex} className="text-gray-500">
-                                                    - {sub.value}
+                                                    - {sub.subtitle}
                                                 </li>
                                             ))}
                                         </ul>
@@ -249,6 +248,14 @@ function Activities() {
                         </ul>
                     </div>
                 )}
+
+                {/* Botón para mostrar todos los datos en un JSON */}
+                <button
+                    onClick={handleShowData}
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease"
+                >
+                    Mostrar datos en JSON
+                </button>
             </div>
         </div>
     );

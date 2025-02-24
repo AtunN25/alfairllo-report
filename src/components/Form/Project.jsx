@@ -19,21 +19,21 @@ function Project() {
 
         // Crear un objeto con los datos del formulario
         const formData = {
-            date: getCurrentDate(), // Fecha en formato YYYY-MM-DD
-            overseer: e.target.overseer.value, // Obtener el valor del campo "overseer"
-            email: e.target.email.value, // Obtener el valor del campo "email"
-            project_id: 3 // Valor definido de 3
+            date: getCurrentDate(), 
+            overseer: e.target.overseer.value, 
+            email: e.target.email.value, 
+            project_id: 3 
         };
 
-        console.log(formData); // Verificar los datos antes de enviar
+        console.log(formData); 
 
-        try {
+        /*try {
             const response = await fetch('http://localhost:3000/api/report', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json' // Indicar que enviamos JSON
+                    'Content-Type': 'application/json' 
                 },
-                body: JSON.stringify(formData) // Convertir el objeto a JSON
+                body: JSON.stringify(formData) 
             });
 
             const data = await response.json(); 
@@ -48,7 +48,7 @@ function Project() {
         } catch (error) {
             console.error('Error:', error);
             alert('Error al enviar el reporte');
-        }
+        }*/
     };
 
     return (
