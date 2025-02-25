@@ -420,7 +420,7 @@ function populateTemplate(html: string, data: ProjectData): string {
   if (data.wells && data.wells.length > 0) {
     const labHtml = `
       <div>
-        <h3>LABORATORIO</h3>
+       
         <div>
           <table border="1">
             <thead>

@@ -136,7 +136,7 @@ function SafetyTalk() {
     return (
         <div className="cartadiv">
             <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">Jornada de charlas</div>
+                <div className="font-bold text-xl mb-2">Charla</div>
                 <p className="text-gray-700 text-base">
                     Muy buenas ... A continuación ingrese los datos generales respecto a la Jornada de Charla
                 </p>
@@ -145,7 +145,7 @@ function SafetyTalk() {
                 <form onSubmit={handleSubmit}>
                     {/* Input para el supervisor */}
                     <div>
-                        <p className="text-gray-700 text-base">Personal Supervisor:</p>
+                        <p className="text-gray-700 text-base">Encargado Charla:</p>
                         <input
                             className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                             placeholder="Supervisor"
