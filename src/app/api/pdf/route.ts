@@ -126,10 +126,11 @@ function populateTemplate(html: string, data: ProjectData): string {
   const email = data.project.reports.length > 0 ? data.project.reports[0].email : "Correo no disponible";
   const projectName = data.project.name || "Nombre no disponible";
   const year = reportDate ? new Date(reportDate).getFullYear() : "Año no disponible";
-  
+
   const time = data.project.reports.length > 0 ? data.project.reports[0].safety_talks[0].time : "tiempo no disponible";
   const speaker = data.project.reports.length > 0 ? data.project.reports[0].safety_talks[0].speaker : "Supervisor no disponible";
-  
+
+  console.log(data.project.reports[0])
   // Reemplazar placeholders generales
   let populatedHtml = html
     .replace("{{project_name}}", projectName)
@@ -144,38 +145,50 @@ function populateTemplate(html: string, data: ProjectData): string {
   // Extraer actividades diarias y charlas de seguridad desde reports
   const dailyActivities = data.project.reports.flatMap(report => report.daily_activities || []);
   const safetyTalks = data.project.reports.flatMap(report => report.safety_talks || []);
-  
+
   console.log("📌 Actividades Diarias:", dailyActivities);
   console.log("📌 Charlas de Seguridad:", safetyTalks[0].subtitles);
 
   console.log("📌 time:", time);
   console.log("📌 speaker:", speaker);
 
-// Reemplazar charla de seguridad (asumiendo que solo hay un orador)
-if (safetyTalks.length > 0) {
-  let safetyTalkHtml = "";
+  const imagen = dailyActivities[0].picture;
+  console.log("📌 imagen:", imagen);
+  // Reemplazar charla de seguridad (asumiendo que solo hay un orador)
+  if (safetyTalks.length > 0) {
+    let safetyTalkHtml = "";
 
-  const safetyTalk = safetyTalks[0]; // Solo el primer orador
+    const safetyTalk = safetyTalks[0]; // Solo el primer orador
 
-  // Verificar si hay subtítulos y generar la lista
-  if (safetyTalk.subtitles && safetyTalk.subtitles.length > 0) {
-    const subtitlesList = safetyTalk.subtitles
-      .map(subtitle => `<li>${subtitle.subtitle}</li>`)
-      .join(""); // Convertir los subtítulos en HTML
+    // Verificar si hay subtítulos y generar la lista
+    if (safetyTalk.subtitles && safetyTalk.subtitles.length > 0) {
+      const subtitlesList = safetyTalk.subtitles
+        .map(subtitle => `<li>${subtitle.subtitle}</li>`)
+        .join(""); // Convertir los subtítulos en HTML
 
-    safetyTalkHtml += `<ol type="A">${subtitlesList}</ol>`;
+      safetyTalkHtml += `<ol type="A">${subtitlesList}</ol>`;
+    } else {
+      safetyTalkHtml += `<p>No hay subtítulos disponibles.</p>`;
+    }
+
+    // Reemplazar el placeholder {{safety_talks}} con el contenido generado
+    populatedHtml = populatedHtml.replace("{{safety_talks}}", safetyTalkHtml);
   } else {
-    safetyTalkHtml += `<p>No hay subtítulos disponibles.</p>`;
+    // Si no hay charlas de seguridad
+    populatedHtml = populatedHtml.replace("{{safety_talks}}", "<p>No hay charlas de seguridad disponibles.</p>");
   }
 
-  // Reemplazar el placeholder {{safety_talks}} con el contenido generado
-  populatedHtml = populatedHtml.replace("{{safety_talks}}", safetyTalkHtml);
-} else {
-  // Si no hay charlas de seguridad
-  populatedHtml = populatedHtml.replace("{{safety_talks}}", "<p>No hay charlas de seguridad disponibles.</p>");
-}
+  // Verificar si hay una imagen disponible
+  if (imagen) {
+    // Crear el HTML para la imagen
+    const imageHtml = `<img src="${imagen}" alt="Imagen de la actividad" style="max-width: 100%; height: auto; margin-bottom: 20px;" />`;
 
-
+    // Reemplazar el placeholder {{imagen}} con la imagen
+    populatedHtml = populatedHtml.replace("{{imagen}}", imageHtml);
+  } else {
+    // Si no hay imagen, mostrar un mensaje
+    populatedHtml = populatedHtml.replace("{{imagen}}", "<p>No hay imágenes disponibles</p>");
+  }
 
   // Generar dinámicamente la lista de actividades diarias
   if (dailyActivities.length > 0) {
@@ -403,8 +416,8 @@ if (safetyTalks.length > 0) {
     populatedHtml = populatedHtml.replace("{{wells_tables}}", "<p>No hay datos de pozos disponibles</p>");
   }
 
-   // Generar dinámicamente la tabla de laboratorios
-   if (data.wells && data.wells.length > 0) {
+  // Generar dinámicamente la tabla de laboratorios
+  if (data.wells && data.wells.length > 0) {
     const labHtml = `
       <div>
         <h3>LABORATORIO</h3>
@@ -429,18 +442,18 @@ if (safetyTalks.length > 0) {
                       </thead>
                       <tbody>
                         ${data.wells
-                          .flatMap(well =>
-                            (well.lab_shipments ?? []).flatMap(shipment =>
-                              (shipment.sample_shipments ?? []).map(sample => `
+        .flatMap(well =>
+          (well.lab_shipments ?? []).flatMap(shipment =>
+            (shipment.sample_shipments ?? []).map(sample => `
                                 <tr>
                                   <td>${sample.date}</td>
                                   <td>${well.name}</td>
                                   <td>${sample.trc}</td>
                                 </tr>
                               `)
-                            )
-                          )
-                          .join("")}
+          )
+        )
+        .join("")}
                       </tbody>
                     </table>
 
@@ -458,17 +471,17 @@ if (safetyTalks.length > 0) {
                       </thead>
                       <tbody>
                         ${data.wells
-                          .flatMap(well =>
-                            (well.lab_shipments ?? []).flatMap(shipment =>
-                              (shipment.sample_shipments ?? []).map(sample => `
+        .flatMap(well =>
+          (well.lab_shipments ?? []).flatMap(shipment =>
+            (shipment.sample_shipments ?? []).map(sample => `
                                 <tr>
                                   <td>${sample.trc_from}</td>
                                   <td>${sample.trc_to}</td>
                                 </tr>
                               `)
-                            )
-                          )
-                          .join("")}
+          )
+        )
+        .join("")}
                       </tbody>
                     </table>
 
@@ -486,17 +499,17 @@ if (safetyTalks.length > 0) {
                       </thead>
                       <tbody>
                         ${data.wells
-                          .flatMap(well =>
-                            (well.lab_shipments ?? []).flatMap(shipment =>
-                              (shipment.sample_shipments ?? []).map(sample => `
+        .flatMap(well =>
+          (well.lab_shipments ?? []).flatMap(shipment =>
+            (shipment.sample_shipments ?? []).map(sample => `
                                 <tr>
                                   <td>${sample.meters_from}</td>
                                   <td>${sample.meters_to}</td>
                                 </tr>
                               `)
-                            )
-                          )
-                          .join("")}
+          )
+        )
+        .join("")}
                       </tbody>
                     </table>
 
@@ -512,18 +525,18 @@ if (safetyTalks.length > 0) {
                       </thead>
                       <tbody>
                         ${data.wells
-                          .flatMap(well =>
-                            (well.lab_shipments ?? []).flatMap(shipment =>
-                              (shipment.sample_shipments ?? []).map(sample => `
+        .flatMap(well =>
+          (well.lab_shipments ?? []).flatMap(shipment =>
+            (shipment.sample_shipments ?? []).map(sample => `
                                 <tr>
-                                  <td> ${(sample.trc_to?? 0) - (sample.trc_from?? 0)}</td>
+                                  <td> ${(sample.trc_to ?? 0) - (sample.trc_from ?? 0)}</td>
                                   <td>${(sample.meters_to ?? 0) - (sample.meters_from ?? 0)}</td>
                                   <td>${sample.observation}</td>
                                 </tr>
                               `)
-                            )
-                          )
-                          .join("")}
+          )
+        )
+        .join("")}
                       </tbody>
                     </table>
                   </div>
@@ -542,9 +555,9 @@ if (safetyTalks.length > 0) {
     populatedHtml = populatedHtml.replace("{{lab_tables}}", "<p>No hay datos de laboratorio disponibles</p>");
   }
 
-    // Generar dinámicamente las tablas de recepciones
-    if (data.wells && data.wells.length > 0) {
-      const receptionsHtml = `
+  // Generar dinámicamente las tablas de recepciones
+  if (data.wells && data.wells.length > 0) {
+    const receptionsHtml = `
         <table>
           <thead>
             <tr>
@@ -605,19 +618,19 @@ if (safetyTalks.length > 0) {
                   </thead>
                   <tbody>
                     ${data.wells
-                          .flatMap(well =>
-                            (well.receptions ?? []).flatMap(reception =>`
+        .flatMap(well =>
+          (well.receptions ?? []).flatMap(reception => `
                              
                                 <tr>
                                   <td>${reception.from}</td>
                                   <td>${reception.to}</td>
-                                  <td>${((reception.to?? 0) - (reception.from ?? 0)).toFixed(2)}</td>
+                                  <td>${((reception.to ?? 0) - (reception.from ?? 0)).toFixed(2)}</td>
   
                                 </tr>
                               
                             `)
-                          )
-                          .join("")}
+        )
+        .join("")}
                   </tbody>
                 </table>
         </td>
@@ -642,19 +655,19 @@ if (safetyTalks.length > 0) {
               <tbody>
               
                ${data.wells
-                          .flatMap(well =>
-                            (well.receptions ?? []).flatMap(receptions =>
-                              (receptions.photographs ?? []).map(photograph => `
+        .flatMap(well =>
+          (well.receptions ?? []).flatMap(receptions =>
+            (receptions.photographs ?? []).map(photograph => `
                                 <tr>
                                   <td>${photograph.from}</td>
                                   <td>${photograph.to}</td>
-                                  <td>${((photograph.to?? 0) - (photograph.from ?? 0)).toFixed(2)}</td>
+                                  <td>${((photograph.to ?? 0) - (photograph.from ?? 0)).toFixed(2)}</td>
                           
                                 </tr>
                               `)
-                            )
-                          )
-                          .join("")}
+          )
+        )
+        .join("")}
               </tbody>
             </table>
 
@@ -672,19 +685,19 @@ if (safetyTalks.length > 0) {
                 </tr>
               </thead>
                ${data.wells
-                          .flatMap(well =>
-                            (well.receptions ?? []).flatMap(receptions =>
-                              (receptions.regularized ?? []).map(regularized => `
+        .flatMap(well =>
+          (well.receptions ?? []).flatMap(receptions =>
+            (receptions.regularized ?? []).map(regularized => `
                                 <tr>
                                   <td>${regularized.from}</td>
                                   <td>${regularized.to}</td>
-                                  <td>${((regularized.to?? 0) - (regularized.from ?? 0)).toFixed(2)}</td>
+                                  <td>${((regularized.to ?? 0) - (regularized.from ?? 0)).toFixed(2)}</td>
                               
                                 </tr>
                               `)
-                            )
-                          )
-                          .join("")}
+          )
+        )
+        .join("")}
             </table>
 
             <table>
@@ -702,19 +715,19 @@ if (safetyTalks.length > 0) {
               </thead>
               <tbody>
               ${data.wells
-                .flatMap(well =>
-                  (well.receptions ?? []).flatMap(receptions =>
-                    (receptions.rqd ?? []).map(rqd => `
+        .flatMap(well =>
+          (well.receptions ?? []).flatMap(receptions =>
+            (receptions.rqd ?? []).map(rqd => `
                       <tr>
                         <td>${rqd.from}</td>
                         <td>${rqd.to}</td>
-                        <td>${((rqd.to?? 0) - (rqd.from ?? 0)).toFixed(2)}</td>
+                        <td>${((rqd.to ?? 0) - (rqd.from ?? 0)).toFixed(2)}</td>
              
                       </tr>
                     `)
-                  )
-                )
-                .join("")}
+          )
+        )
+        .join("")}
               </tbody>
             </table>
 
@@ -733,19 +746,19 @@ if (safetyTalks.length > 0) {
               </thead>
               <tbody>
               ${data.wells
-                .flatMap(well =>
-                  (well.receptions ?? []).flatMap(receptions =>
-                    (receptions.susceptibility ?? []).map(susceptibility => `
+        .flatMap(well =>
+          (well.receptions ?? []).flatMap(receptions =>
+            (receptions.susceptibility ?? []).map(susceptibility => `
                       <tr>
                         <td>${susceptibility.from}</td>
                         <td>${susceptibility.to}</td>
-                        <td>${((susceptibility.to?? 0) - (susceptibility.from ?? 0)).toFixed(2)}</td>
+                        <td>${((susceptibility.to ?? 0) - (susceptibility.from ?? 0)).toFixed(2)}</td>
                     
                       </tr>
                     `)
-                  )
-                )
-                .join("")}
+          )
+        )
+        .join("")}
               </tbody>
             </table>
 
@@ -764,19 +777,19 @@ if (safetyTalks.length > 0) {
               </thead>
               <tbody>
               ${data.wells
-                .flatMap(well =>
-                  (well.receptions ?? []).flatMap(receptions =>
-                    (receptions.test_tubes_meters ?? []).map(test_tubes_meters => `
+        .flatMap(well =>
+          (well.receptions ?? []).flatMap(receptions =>
+            (receptions.test_tubes_meters ?? []).map(test_tubes_meters => `
                       <tr>
                         <td>${test_tubes_meters.from}</td>
                         <td>${test_tubes_meters.to}</td>
-                        <td>${((test_tubes_meters.to?? 0) - (test_tubes_meters.from ?? 0)).toFixed(2)}</td>
+                        <td>${((test_tubes_meters.to ?? 0) - (test_tubes_meters.from ?? 0)).toFixed(2)}</td>
                 
                       </tr>
                     `)
-                  )
-                )
-                .join("")}
+          )
+        )
+        .join("")}
               </tbody>
             </table>
 
@@ -796,9 +809,9 @@ if (safetyTalks.length > 0) {
               </thead>
               <tbody>
               ${data.wells
-                .flatMap(well =>
-                  (well.receptions ?? []).flatMap(receptions =>
-                    (receptions.test_tubes_meters ?? []).map(test_tubes_meters => `
+        .flatMap(well =>
+          (well.receptions ?? []).flatMap(receptions =>
+            (receptions.test_tubes_meters ?? []).map(test_tubes_meters => `
                       <tr>
                         <td>${test_tubes_meters.from_meters}</td>
                         <td>${test_tubes_meters.to_meters}</td>
@@ -806,9 +819,9 @@ if (safetyTalks.length > 0) {
                         <td>${(well.observations)}</td>
                       </tr>
                     `)
-                  )
-                )
-                .join("")}
+          )
+        )
+        .join("")}
               </tbody>
             </table>
 
@@ -819,14 +832,14 @@ if (safetyTalks.length > 0) {
         </tbody>
         </table>
             `;
-          
-  
-      // Reemplazar el placeholder {{receptions_tables}} con las tablas generadas
-      populatedHtml = populatedHtml.replace("{{receptions_tables}}", receptionsHtml);
-    } else {
-      // Si no hay recepciones, mostrar un mensaje
-      populatedHtml = populatedHtml.replace("{{receptions_tables}}", "<p>No hay datos de recepciones disponibles</p>");
-    }
+
+
+    // Reemplazar el placeholder {{receptions_tables}} con las tablas generadas
+    populatedHtml = populatedHtml.replace("{{receptions_tables}}", receptionsHtml);
+  } else {
+    // Si no hay recepciones, mostrar un mensaje
+    populatedHtml = populatedHtml.replace("{{receptions_tables}}", "<p>No hay datos de recepciones disponibles</p>");
+  }
 
   return populatedHtml;
 }
@@ -840,6 +853,17 @@ export async function GET(req: Request) {
     if (!project_id) {
       return NextResponse.json({ error: "Project ID is required" }, { status: 400 });
     }
+
+    const getCurrentDate = () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    const currentDate = getCurrentDate(); // Ejemplo: "2025-02-25"
+    console.log(currentDate)
 
     // Conectar a la base de datos y obtener los datos
     const sql = neon(process.env.DATABASE_URL as string);
@@ -1044,7 +1068,8 @@ export async function GET(req: Request) {
         project p
         INNER JOIN report r ON p.id = r.project_id
       WHERE 
-        p.id = ${project_id}
+        p.id = 3
+        AND r.id = ${project_id}
       GROUP BY 
         p.id;
     `;
