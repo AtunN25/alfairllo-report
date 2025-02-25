@@ -204,7 +204,7 @@ function populateTemplate(html: string, data: ProjectData): string {
 
   // Generar dinámicamente las tablas de pozos
   if (data.wells && data.wells.length > 0) {
-    let wellsHtml = `
+    const wellsHtml = `
 
     <table border="1">
   <thead>
