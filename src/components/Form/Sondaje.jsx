@@ -35,8 +35,18 @@ function Sondaje() {
         }));
     };
 
+    // Obtener la fecha actual en formato DD-MM-YYYY
+    const getCurrentDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     // Función para manejar el envío de datos
-    const handleSubmit = () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         // Crear el JSON con el formato deseado
         const sondajeData = {
             sondajes: [sondaje]
@@ -45,8 +55,125 @@ function Sondaje() {
         // Guardar los datos en localStorage
         localStorage.setItem("sondaje", JSON.stringify(sondajeData));
         alert("Datos guardados correctamente en localStorage.");
-        console.log("Datos guardados:", sondajeData); // Mostrar los datos en la consola
+        console.log("Datos guardados:", sondajeData);
+
+        console.log("loggeo :",
+            JSON.stringify({
+                date: getCurrentDate(),
+                from: sondajeData.sondajes[0].loggeo.from,
+                to: sondajeData.sondajes[0].loggeo.to,
+                well_id: sondajeData.sondajes[0].pozo
+            })
+        )
+        try {
+            const response = await fetch('http://localhost:3000/api/loggeo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    date: getCurrentDate(),
+                    from: sondajeData.sondajes[0].loggeo.from,
+                    to: sondajeData.sondajes[0].loggeo.to,
+                    well_id: sondajeData.sondajes[0].pozo
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log('Loggeo enviado exitosamente.');
+                alert('Loggeo enviado exitosamente.');
+            } else {
+                alert('Error al enviar el Loggeo');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al enviar el Loggeo');
+        }
+
+        console.log("cut :", JSON.stringify({
+            date: getCurrentDate(),
+            from: sondajeData.sondajes[0].corte.from,
+            to: sondajeData.sondajes[0].corte.to,
+            Uncut_meters: sondajeData.sondajes[0].corte.metrosSinCortar,
+            observation: sondajeData.sondajes[0].corte.observacion,
+            well_id: sondajeData.sondajes[0].pozo
+        }))
+
+        try {
+            const response = await fetch('http://localhost:3000/api/cut', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    date: getCurrentDate(),
+                    from: sondajeData.sondajes[0].corte.from,
+                    to: sondajeData.sondajes[0].corte.to,
+                    uncut_meters: sondajeData.sondajes[0].corte.metrosSinCortar,
+                    observation: sondajeData.sondajes[0].corte.observacion,
+                    well_id: sondajeData.sondajes[0].pozo
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log('corte enviado exitosamente.');
+                alert('corte enviado exitosamente.');
+            } else {
+                alert('Error al enviar el corte');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al enviar el corte');
+        }
+
+
+        console.log("sampling_surveys :",
+            JSON.stringify({
+                date: getCurrentDate(),
+                from: sondajeData.sondajes[0].muestreo.from,
+                to: sondajeData.sondajes[0].muestreo.to,
+                unsampled_meters: sondajeData.sondajes[0].muestreo.metrosSinMuestrear,
+                well_id: sondajeData.sondajes[0].pozo
+            })
+        )
+        try {
+            const response = await fetch('http://localhost:3000/api/samply_surverys', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    date: getCurrentDate(),
+                    from: sondajeData.sondajes[0].muestreo.from,
+                    to: sondajeData.sondajes[0].muestreo.to,
+                    unsampled_meters: sondajeData.sondajes[0].muestreo.metrosSinMuestrear,
+                    well_id: sondajeData.sondajes[0].pozo
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log('sampling_surveys enviado exitosamente.');
+                alert('sampling_surveys enviado exitosamente.');
+            } else {
+                alert('Error al enviar el sampling_surveys');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al enviar el sampling_surveys');
+        }
+
+
+
+        // Mostrar los datos en la consola
     };
+
+
 
     return (
         <div className="cartadiv">
@@ -66,8 +193,8 @@ function Sondaje() {
                             onChange={(e) => handleInputChange("pozo", e.target.value)}
                         >
                             <option value="">Seleccione un pozo</option>
-                            <option value="ZDDH00356">ZDDH00356</option>
-                            <option value="ZDDH00358">ZDDH00358</option>
+                            <option value="6">ZDDH00356</option>
+                            <option value="7">ZDDH00358</option>
                         </select>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-slate-700">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />

@@ -25,8 +25,17 @@ function Laboratory() {
         }));
     };
 
+    // Obtener la fecha actual en formato DD-MM-YYYY
+    const getCurrentDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     // Función para manejar el envío de datos
-    const handleSubmit = () => {
+    const handleSubmit = async (e) => {
         // Validar que todos los campos estén completos
         if (
             !laboratorio.pozo ||
@@ -52,22 +61,83 @@ function Laboratory() {
         // Guardar los datos en localStorage
         localStorage.setItem("laboratorio", JSON.stringify(laboratorioData));
         alert("Datos guardados correctamente en localStorage.");
-        console.log("Datos guardados:", laboratorioData); // Mostrar los datos en la consola
+        console.log("Datos enviados:", JSON.stringify({
+            laboratory_name : laboratorio.nombreLaboratorio ,
+            status : laboratorio.estadoLaboratorio,
+            well_id : laboratorio.pozo
+        })); // Mostrar los datos en la consola
 
-        // Limpiar el formulario
-        setLaboratorio({
-            id: laboratorio.id + 1, // Incrementar el ID para el próximo registro
-            pozo: "",
-            nombreLaboratorio: "",
-            estadoLaboratorio: "",
-            nombreTRC: "",
-            trcDesde: "",
-            trcHasta: "",
-            metrosDesde: "",
-            metrosHasta: "",
-            estadoMuestra: "",
-            observacion: ""
-        });
+        try {
+            const response = await fetch('http://localhost:3000/api/lab_shipment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    laboratory_name : laboratorio.nombreLaboratorio ,
+                    status : laboratorio.estadoLaboratorio,
+                    well_id : laboratorio.pozo
+                })
+            });
+
+            const datalab = await response.json();
+
+            if (response.ok) {
+                alert(`Laboratorio enviado exitosamente. ID del laboratio: ${datalab.laboratorio_id}`);
+
+                console.log(JSON.stringify({
+                    date : getCurrentDate(),
+                    trc : laboratorio.nombreTRC,
+                    trc_from : laboratorio.trcDesde,
+                    trc_to : laboratorio.trcHasta,
+                    meters_from : laboratorio.metrosDesde,
+                    meters_to : laboratorio.metrosHasta,
+                    observation : laboratorio.observacion,
+                    status : laboratorio.estadoMuestra,
+                    lab_shipment_id: datalab.laboratorio_id
+                }))
+                try {
+                    const response = await fetch('http://localhost:3000/api/sample_shipment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            date : getCurrentDate(),
+                            trc : laboratorio.nombreTRC,
+                            trc_from : laboratorio.trcDesde,
+                            trc_to : laboratorio.trcHasta,
+                            meters_from : laboratorio.metrosDesde,
+                            meters_to : laboratorio.metrosHasta,
+                            observation : laboratorio.observacion,
+                            status : laboratorio.estadoMuestra,
+                            lab_shipment_id: datalab.laboratorio_id
+                        })
+                    });
+        
+                    const data = await response.json();
+        
+                    if (response.ok) {
+                        console.log('sample_shipment enviado exitosamente.');
+                        alert('sample_shipment enviado exitosamente.');
+                    } else {
+                        alert('Error al enviar el sample_shipment');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error al enviar el sample_shipment');
+                }
+
+
+            } else {
+                alert('Error al enviar el sample_shipment');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al enviar el sample_shipment');
+        }
+       
+        
     };
 
     return (
@@ -88,8 +158,8 @@ function Laboratory() {
                             onChange={(e) => handleInputChange("pozo", e.target.value)}
                         >
                             <option value="">Seleccione un pozo</option>
-                            <option value="ZDDH00356">ZDDH00356</option>
-                            <option value="ZDDH00358">ZDDH00358</option>
+                            <option value="6">ZDDH00356</option>
+                            <option value="7">ZDDH00358</option>
                         </select>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-slate-700">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
