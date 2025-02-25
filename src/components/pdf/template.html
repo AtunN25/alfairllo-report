@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,37 +70,40 @@
     }
   </style>
 </head>
+
 <body>
   <h1>Reporte Diario de Actividades</h1>
   <p><strong>Fecha:</strong> {{date}}</p>
 
-  <!-- <h3>1. Inicio de jornada con charla de {{time}} minutos para todo el personal dictada por supervisor {{speaker}}</h3>
-  <ol type="A">{{subtitles}}</ol>-->
+
+  <h3>1.Inicio de jornada con charla de {{time}} minutos para todo el personal dictada por
+    supervisor {{speaker}}</h3>
+
+  {{safety_talks}}
 
   <!-- Placeholder para actividades diarias -->
   {{daily_activities}}
 
-  
+  <!-- Tablas de pozos -->
+  {{wells_tables}}
 
- <!-- Tablas de pozos -->
- {{wells_tables}}
-
- <!-- Tablas de laboratorios -->
- {{lab_tables}}
+  <!-- Tablas de laboratorios -->
+  {{lab_tables}}
 
 
-{{Overseer}}
+  {{Overseer}}
 
-{{receptions_tables}}
+  {{receptions_tables}}
 
-Supervisor de muestrera
+  Supervisor de muestrera
 
-{{name}}
+  {{name}}
 
-{{Date.Year}}
+  {{Date.Year}}
 
-{{email}}
+  {{email}}
 
   </div>
 </body>
+
 </html>

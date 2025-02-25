@@ -27,7 +27,7 @@ function Project() {
 
         console.log(formData); 
 
-        /*try {
+        try {
             const response = await fetch('http://localhost:3000/api/report', {
                 method: 'POST',
                 headers: {
@@ -48,7 +48,7 @@ function Project() {
         } catch (error) {
             console.error('Error:', error);
             alert('Error al enviar el reporte');
-        }*/
+        }
     };
 
     return (

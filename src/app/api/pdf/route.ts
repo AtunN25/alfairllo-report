@@ -126,7 +126,10 @@ function populateTemplate(html: string, data: ProjectData): string {
   const email = data.project.reports.length > 0 ? data.project.reports[0].email : "Correo no disponible";
   const projectName = data.project.name || "Nombre no disponible";
   const year = reportDate ? new Date(reportDate).getFullYear() : "Año no disponible";
-
+  
+  const time = data.project.reports.length > 0 ? data.project.reports[0].safety_talks[0].time : "tiempo no disponible";
+  const speaker = data.project.reports.length > 0 ? data.project.reports[0].safety_talks[0].speaker : "Supervisor no disponible";
+  
   // Reemplazar placeholders generales
   let populatedHtml = html
     .replace("{{project_name}}", projectName)
@@ -134,48 +137,45 @@ function populateTemplate(html: string, data: ProjectData): string {
     .replace("{{Overseer}}", overseer)
     .replace("{{name}}", projectName)
     .replace("{{Date.Year}}", year.toString())
-    .replace("{{email}}", email);
+    .replace("{{email}}", email)
+    .replace("{{time}}", time)
+    .replace("{{speaker}}", speaker);
 
   // Extraer actividades diarias y charlas de seguridad desde reports
   const dailyActivities = data.project.reports.flatMap(report => report.daily_activities || []);
   const safetyTalks = data.project.reports.flatMap(report => report.safety_talks || []);
-
+  
   console.log("📌 Actividades Diarias:", dailyActivities);
-  console.log("📌 Charlas de Seguridad:", safetyTalks);
+  console.log("📌 Charlas de Seguridad:", safetyTalks[0].subtitles);
 
-  // Reemplazar charla de seguridad (asumiendo que solo hay una por ahora)
-  if (safetyTalks.length > 0) {
-    const safetyTalk = safetyTalks[0];
+  console.log("📌 time:", time);
+  console.log("📌 speaker:", speaker);
 
-    // Reemplazar speaker y time
-    populatedHtml = populatedHtml
-      .replace("{{speaker}}", safetyTalk.speaker)
-      .replace("{{time}}", safetyTalk.time);
+// Reemplazar charla de seguridad (asumiendo que solo hay un orador)
+if (safetyTalks.length > 0) {
+  let safetyTalkHtml = "";
 
-    // Generar dinámicamente la lista de subtítulos
-    if (safetyTalk.subtitles && safetyTalk.subtitles.length > 0) {
-      const subtitlesList = safetyTalk.subtitles
-        .map(subtitle => `<li>${subtitle.subtitle}</li>`)
-        .join(""); // Convertir el array de <li> en un string
+  const safetyTalk = safetyTalks[0]; // Solo el primer orador
 
-      // Reemplazar el placeholder {{subtitles}} con la lista generada
-      populatedHtml = populatedHtml.replace(
-        '<ol type="A">{{subtitles}}</ol>',
-        `<ol type="A">${subtitlesList}</ol>`
-      );
-    } else {
-      // Si no hay subtítulos, mostrar un mensaje
-      populatedHtml = populatedHtml.replace(
-        '<ol type="A">{{subtitles}}</ol>',
-        '<ol type="A">No hay subtítulos disponibles</ol>'
-      );
-    }
+  // Verificar si hay subtítulos y generar la lista
+  if (safetyTalk.subtitles && safetyTalk.subtitles.length > 0) {
+    const subtitlesList = safetyTalk.subtitles
+      .map(subtitle => `<li>${subtitle.subtitle}</li>`)
+      .join(""); // Convertir los subtítulos en HTML
+
+    safetyTalkHtml += `<ol type="A">${subtitlesList}</ol>`;
   } else {
-    populatedHtml = populatedHtml
-      .replace("{{speaker}}", "No hay orador")
-      .replace("{{time}}", "Sin tiempo especificado")
-      .replace('<ol type="A">{{subtitles}}</ol>', '<ol type="A">No hay charlas de seguridad disponibles</ol>');
+    safetyTalkHtml += `<p>No hay subtítulos disponibles.</p>`;
   }
+
+  // Reemplazar el placeholder {{safety_talks}} con el contenido generado
+  populatedHtml = populatedHtml.replace("{{safety_talks}}", safetyTalkHtml);
+} else {
+  // Si no hay charlas de seguridad
+  populatedHtml = populatedHtml.replace("{{safety_talks}}", "<p>No hay charlas de seguridad disponibles.</p>");
+}
+
+
 
   // Generar dinámicamente la lista de actividades diarias
   if (dailyActivities.length > 0) {
@@ -183,7 +183,7 @@ function populateTemplate(html: string, data: ProjectData): string {
 
     dailyActivities.forEach((activity, index) => {
       // Agregar el título de la actividad como un elemento de lista numerada
-      activitiesHtml += `<h3>${index + 1}. ${activity.title}</h3>`;
+      activitiesHtml += `<h3>${index + 2}. ${activity.title}</h3>`;
 
       // Si hay puntos, generar una lista de descripciones
       if (activity.points && activity.points.length > 0) {

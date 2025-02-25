@@ -52,6 +52,8 @@ function SafetyTalk() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const reportId = localStorage.getItem('report_id');
+
         // Crear un objeto con los datos del formulario
         const formData = {
             safety_talks: [
@@ -63,7 +65,70 @@ function SafetyTalk() {
             ]
         };
 
+        if (!reportId) {
+            alert('No se encontró el report_id en el localStorage');
+            return;
+        }
+
+
         console.log(JSON.stringify(formData, null, 2));
+
+        const safety_talk = {
+            speaker: staticData.speaker,
+            time: staticData.time,
+            report_id: parseInt(reportId, 10) //lo convierte a base 10
+        };
+
+        console.log(JSON.stringify(safety_talk, null, 2));
+
+        try {
+            const response = await fetch('http://localhost:3000/api/safety_talk', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(safety_talk)
+            });
+
+            const data = await response.json();
+
+            console.log(data)
+
+            if (response.ok) {
+                alert(`Safety Talk enviado exitosamente. ID : ${data.safety_talk_id}`);
+
+
+                // Enviar cada subtitle con el safety_talk_id
+                await Promise.all(
+                    actividades.map(async (actividad) => {
+                        const subtitleData = {
+                            subtitle: actividad.subtitle,
+                            safety_talk_id: data.safety_talk_id
+                        };
+
+                        const subtitleResponse = await fetch('http://localhost:3000/api/safety_talk_Subtitle', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(subtitleData)
+                        });
+
+                        if (!subtitleResponse.ok) {
+                            throw new Error(`Error al enviar subtitle: ${actividad.subtitle}`);
+                        }
+                    })
+                );
+
+            } else {
+                alert('Error al enviar Safety Talk');
+            }
+
+
+        } catch {
+            console.error('Error:', error);
+            alert('Error al enviar Safety Talk');
+        }
 
         /*try {
             const response = await fetch('http://localhost:3000/api/report', {

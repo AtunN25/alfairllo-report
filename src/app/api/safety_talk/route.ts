@@ -13,13 +13,17 @@ export async function POST(req: Request) {
     const sql = neon(process.env.DATABASE_URL as string);
 
     
-    await sql`
+    const result = await sql`
       INSERT INTO safety_talk (speaker, "time", report_id) 
-      VALUES (${speaker}, ${time}, ${report_id})
+      VALUES (${speaker}, ${time}, ${report_id}) RETURNING id
     `;
 
   
-    return NextResponse.json({ message: "Safety talk added successfully" });
+     // Extraer el report_id del resultado
+     const safety_talk_id = result[0].id;
+
+     // Retornar el report_id en la respuesta
+     return NextResponse.json({ message: 'Report added successfully', safety_talk_id });
   } catch (error) {
     console.error("Error inserting safety talk:", error);
 
