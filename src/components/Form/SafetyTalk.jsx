@@ -130,28 +130,7 @@ function SafetyTalk() {
             alert('Error al enviar Safety Talk');
         }
 
-        /*try {
-            const response = await fetch('http://localhost:3000/api/report', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json' 
-                },
-                body: JSON.stringify(formData) 
-            });
-
-            const data = await response.json(); 
-
-            if (response.ok) {
-                alert(`Reporte enviado exitosamente. ID del reporte: ${data.report_id}`);
-                setReportId(data.report_id); // Guardar el report_id en el estado
-                localStorage.setItem('report_id', data.report_id);
-            } else {
-                alert('Error al enviar el reporte');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error al enviar el reporte');
-        }*/
+       
     };
 
     return (

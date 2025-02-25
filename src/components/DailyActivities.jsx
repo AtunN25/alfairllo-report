@@ -18,7 +18,6 @@ function DailyActivities() {
     };
 
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -28,7 +27,7 @@ function DailyActivities() {
             return;
         }
 
-
+        console.log(file)
         const formData = new FormData()
 
         formData.append('title', title);

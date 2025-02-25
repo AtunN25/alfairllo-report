@@ -8,15 +8,71 @@ function Activities() {
     // Estado para almacenar las actividades confirmadas
     const [actividades, setActividades] = useState([]);
 
+    const [message, setMessage] = useState('');
     // Estado para manejar el archivo seleccionado
     const [file, setFile] = useState(null);
 
-    // Función para manejar el cambio en el archivo seleccionado
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]); // Actualiza el estado con el archivo seleccionado
         }
     };
+
+    const handleShowData = async (e) => {
+        e.preventDefault();
+
+        if (!file) {
+            setMessage('Por favor, selecciona una imagen');
+            return;
+        }
+
+        // Formatear el objeto JSON
+        const data = {
+            actividades: actividades.map((actividad) => ({
+                title: actividad.title,
+                picture: actividad.picture,
+                subtitles: actividad.subtitles
+            }))
+        };
+
+        console.log(JSON.stringify(data, null, 2)); // Mostrar el JSON en la consola
+
+        // Crear FormData
+        const formData = new FormData();
+
+        // Convertir el JSON a string y agregarlo
+        formData.append('actividades', JSON.stringify(data));
+
+        // Agregar el archivo
+        formData.append('picture', file);
+
+        // Agregar el archivo
+        const reportId = localStorage.getItem('report_id');
+        if (!reportId) {
+            setMessage('❌ No se encontró el report_id en el localStorage');
+            return;
+        }
+
+        formData.append('report_id', reportId);
+
+        try {
+            const response = await fetch('/api/actividades', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                setMessage('Actividad diaria agregada con éxito');
+            } else {
+                setMessage(result.error || 'Error al agregar la actividad');
+            }
+        } catch (error) {
+            setMessage('Error de conexión con el servidor: ' + error);
+        }
+
+    };
+
 
     // Función para manejar el clic en "Agregar actividad"
     const handleAddActivity = () => {
@@ -119,18 +175,8 @@ function Activities() {
         setActivityInputs(updatedInputs);
     };
 
-    // Función para mostrar todos los datos en un JSON
-    const handleShowData = () => {
-        const data = {
-            actividades: actividades.map((actividad) => ({
-                title: actividad.title,
-                picture: actividad.picture,
-                subtitles: actividad.subtitles // Aquí están los subtítulos
-            }))
-        };
 
-        console.log(JSON.stringify(data, null, 2)); // Mostrar el JSON en la consola
-    };
+
 
     return (
         <div className="cartadiv">
