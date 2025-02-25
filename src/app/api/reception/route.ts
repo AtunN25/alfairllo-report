@@ -13,13 +13,18 @@ export async function POST(req: Request) {
     const sql = neon(process.env.DATABASE_URL as string);
 
     
-    await sql`
+    const result = await sql`
       INSERT INTO reception ("From", "To", well_id)
-      VALUES (${from}, ${to}, ${well_id})
+      VALUES (${from}, ${to}, ${well_id}) RETURNING id
     `;
 
     
-    return NextResponse.json({ message: "Reception added successfully" });
+    // Extraer el report_id del resultado
+    const reception_id = result[0].id;
+
+    // Retornar el report_id en la respuesta
+    return NextResponse.json({ message: 'Report added successfully', reception_id });
+
   } catch (error) {
     console.error("Error inserting reception:", error);
 
