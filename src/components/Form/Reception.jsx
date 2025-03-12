@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 
 function Reception() {
+
+
     // Estado para almacenar los datos de recepción
     const [reception, setReception] = useState({
         id: 1, // Puedes generar un ID único si es necesario
@@ -57,16 +59,26 @@ function Reception() {
             console.error(`Error en ${tableName}:`, error);
         }
     };
-
+    const getCurrentDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
     // Función para manejar el envío de datos
     const handleSubmit = async (e) => {
+
+
+        
 
         console.log(reception);
 
         const receptionPost = {
             from: reception.from,
             to: reception.to,
-            well_id: reception.pozo
+            well_id: reception.pozo,
+            date : getCurrentDate()
         };
 
         try {

@@ -3,7 +3,7 @@ import { neon } from '@neondatabase/serverless';
 
 export async function POST(req: Request) {
   try {
-    const { from, to, well_id } = await req.json();
+    const { from, to, well_id,date } = await req.json();
 
     
     if (from === undefined || to === undefined || !well_id) {
@@ -14,8 +14,8 @@ export async function POST(req: Request) {
 
     
     const result = await sql`
-      INSERT INTO reception ("From", "To", well_id)
-      VALUES (${from}, ${to}, ${well_id}) RETURNING id
+      INSERT INTO reception ("From", "To", well_id,Date)
+      VALUES (${from}, ${to}, ${well_id},${date}) RETURNING id
     `;
 
     

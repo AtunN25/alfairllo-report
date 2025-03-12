@@ -120,6 +120,7 @@ interface ProjectData {
 function populateTemplate(html: string, data: ProjectData): string {
   console.log("📌 Data recibida:", JSON.stringify(data, null, 2));
 
+  
   // Extraer datos generales
   const reportDate = data.project.reports.length > 0 ? data.project.reports[0].date : "Fecha no disponible";
   const overseer = data.project.reports.length > 0 ? data.project.reports[0].overseer : "Supervisor no disponible";
@@ -241,13 +242,15 @@ function populateTemplate(html: string, data: ProjectData): string {
               </tr>
             </thead>
            <tbody>
-          ${data.wells.map(well => `
-            <tr>
-              <td>${well.company.name}</td>
-              <td>${well.date}</td>
-              <td>${well.name}</td>
-            </tr>
-          `).join("")}
+           ${data.wells.flatMap(well =>
+            (well.loggeo ?? []).map(loggeo => `
+              <tr>
+                <td>${well.company.name}</td>
+                <td>${well.date}</td>
+                <td>${well.name}</td>
+              </tr>
+            `)
+          ).join("")}
         </tbody>
           </table>
 
@@ -288,13 +291,15 @@ function populateTemplate(html: string, data: ProjectData): string {
 
             </thead>
             <tbody>
-            ${data.wells.map(well => `
-              <tr>
-                <td>${well.company.name}</td>
-                <td>${well.date}</td>
-                <td>${well.name}</td>
-              </tr>
-            `).join("")}
+             ${data.wells.flatMap(well =>
+      (well.cut ?? []).map(cut => `
+        <tr>
+          <td>${well.company.name}</td>
+          <td>${well.date}</td>
+          <td>${well.name}</td>
+        </tr>
+      `)
+    ).join("")}
             </tbody>
           </table>
 
@@ -352,12 +357,14 @@ function populateTemplate(html: string, data: ProjectData): string {
 
             </thead>
             <tbody>
-              ${data.wells.map(well => `
-              <tr>
-                <td>${well.company.name}</td>
-                <td>${well.date}</td>
-              </tr>
-            `).join("")}
+               ${data.wells.flatMap(well =>
+      (well.sampling_surveys ?? []).map(survey => `
+        <tr>
+          <td>${well.company.name}</td>
+          <td>${well.date}</td>
+        </tr>
+      `)
+    ).join("")}
             </tbody>
           </table>
 
@@ -589,13 +596,16 @@ function populateTemplate(html: string, data: ProjectData): string {
 
                   </thead>
                   <tbody>
-                  ${data.wells.map(well => `
-                    <tr>
-                      <td>${well.company.name}</td>
-                      <td>${well.date}</td>
-                      <td>${well.name}</td>
-                    </tr>
-                  `).join("")}
+                  
+                  ${data.wells.flatMap(well =>
+                    (well.receptions ?? []).map(reception => `
+                      <tr>
+                        <td>${well.company.name}</td>
+                        <td>${well.date}</td>
+                        <td>${well.name}</td>
+                      </tr>
+                    `).join("")
+                  ).join("")}
                   </tbody>
                 </table>
               </td>
@@ -990,7 +1000,7 @@ export async function GET(req: Request) {
                   )
                 )
                 FROM Reception rec
-                WHERE rec.well_id = w.id
+                WHERE rec.well_id = w.id AND rec.date = ${currentDate}
               ),
               'loggeo', (
                 SELECT json_agg(
@@ -1002,7 +1012,7 @@ export async function GET(req: Request) {
                   )
                 )
                 FROM Loggeo l
-                WHERE l.well_id = w.id
+                WHERE l.well_id = w.id AND l.Date = ${currentDate}
               ),
               'cut', (
                 SELECT json_agg(
@@ -1016,7 +1026,7 @@ export async function GET(req: Request) {
                   )
                 )
                 FROM Cut c
-                WHERE c.well_id = w.id
+                WHERE c.well_id = w.id AND c.Date = ${currentDate}
               ),
               'sampling_surveys', (
                 SELECT json_agg(
@@ -1029,7 +1039,7 @@ export async function GET(req: Request) {
                   )
                 )
                 FROM Sampling_surveys ss
-                WHERE ss.well_id = w.id
+                WHERE ss.well_id = w.id AND ss.Date = ${currentDate}
               ),
               'lab_shipments', (
                 SELECT json_agg(
@@ -1052,7 +1062,7 @@ export async function GET(req: Request) {
                         )
                       )
                       FROM Sample_Shipment samp
-                      WHERE samp.lab_shipment_id = ls.id
+                      WHERE samp.lab_shipment_id = ls.id AND samp.date = ${currentDate}
                     )
                   )
                 )
@@ -1060,8 +1070,10 @@ export async function GET(req: Request) {
                 WHERE ls.well_id = w.id
               )
             )
+
+            
           )
-          FROM Well w
+          FROM Well w WHERE w.id IN (6, 7)
         )
       ) AS json_data
       FROM 
