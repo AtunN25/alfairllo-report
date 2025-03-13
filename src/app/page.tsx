@@ -16,13 +16,13 @@ export default function Home() {
             .
           </li>
           <li>Link hacia el {' '} 
-            <Link href="/pages/project" className="text-blue-500 hover:underline">
+            <Link href="/pages/form" className="text-blue-500 hover:underline">
               formulario
             </Link>
           </li>
 
           <li>Link hacia el {' '} 
-            <Link href="/pages/reporte" className="text-blue-500 hover:underline">
+            <Link href="/pages/report" className="text-blue-500 hover:underline">
               Reporte
             </Link>
           </li>

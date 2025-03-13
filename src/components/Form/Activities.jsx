@@ -300,7 +300,7 @@ function Activities() {
                     onClick={handleShowData}
                     className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease"
                 >
-                    Mostrar datos en JSON
+                    Enviar lista de Actividades
                 </button>
             </div>
         </div>

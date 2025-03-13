@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-
+import { useRouter } from 'next/navigation'; 
 import Project from '@/components/Form/Project'
 //import SafetyTalk from '@/components/SafetyTalk'
 import Activities from '@/components/Form/Activities'
@@ -12,6 +12,8 @@ import Sondaje from '@/components/Form/Sondaje' //valor 2
 import Laboratory from '@/components/Form/Laboratory' //valor 3
 
 function Page() {
+
+    const router = useRouter();
 
     // Estado para manejar la selección
     const [selectedComponent, setSelectedComponent] = useState('3'); // Valor inicial '3' para Laboratory
@@ -34,6 +36,17 @@ function Page() {
                 return <Laboratory />;
         }
     };
+
+    
+
+   
+    const handleGenerateReport = () => {
+        
+        const reportId = localStorage.getItem('report_id');
+        
+        
+        router.push(`/pages/report/${reportId}`);
+      };
 
     return (
         <div className='p-10 bg-slate-200  flex space-x-5'>
@@ -75,6 +88,17 @@ function Page() {
                     </div>
                 </div>
 
+                <div className="cartadiv">
+                    <div className="px-6 py-4">
+
+                        <p className="text-gray-700 text-base">
+                            ... If are you sure ? send to the report
+                        </p>
+                    </div>
+                    <div className="px-6 py-4">
+                    <button onClick={handleGenerateReport} type="button" className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Generarl Reporte</button>
+                    </div>
+                </div>
 
             </div>
 
