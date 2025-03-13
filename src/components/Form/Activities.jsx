@@ -181,10 +181,10 @@ function Activities() {
     return (
         <div className="cartadiv">
             <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">Lista de Actividades</div>
+                <div className="font-bold text-xl mb-2">Activity List</div>
                 <p className="text-gray-700 text-base">
-                    ... A continuación ingrese la lista de actividades
-                </p>
+    ... Please enter the list of activities below
+</p>
             </div>
             <div className="px-6 pt-4 pb-4 space-y-4">
                 {/* Input para seleccionar archivo */}
@@ -199,7 +199,7 @@ function Activities() {
                     onClick={() => alert('No se registró ninguna actividad')}
                     className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition duration-300 ease mr-2"
                 >
-                    No registro
+                    No activity recorded
                 </button>
 
                 {/* Botón "Agregar actividad" */}
@@ -207,7 +207,7 @@ function Activities() {
                     onClick={handleAddActivity}
                     className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 ease"
                 >
-                    Agregar actividad
+                    Add activity
                 </button>
 
                 {/* Inputs para agregar actividades */}
@@ -217,7 +217,7 @@ function Activities() {
                             type="text"
                             value={input.value}
                             onChange={(e) => handleInputChange(input.id, e.target.value)}
-                            placeholder="Ingrese el título de la actividad"
+                            placeholder="Enter the activity title"
                             className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         />
                         <div className="flex gap-2 mt-2">
@@ -225,19 +225,19 @@ function Activities() {
                                 onClick={() => handleConfirmActivity(input.id)}
                                 className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 ease"
                             >
-                                Confirmar
+                                Confirm
                             </button>
                             <button
                                 onClick={() => handleDeleteActivity(input.id)}
                                 className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 ease"
                             >
-                                Eliminar
+                               Delete
                             </button>
                             <button
                                 onClick={() => handleAddSubactivity(input.id)}
                                 className="bg-lime-500 text-white px-4 py-2 rounded-md hover:bg-lime-600 transition duration-300 ease"
                             >
-                                Subtema
+                               Subactivity
                             </button>
                         </div>
 
@@ -250,7 +250,7 @@ function Activities() {
                                     onChange={(e) =>
                                         handleSubactivityChange(input.id, subactivity.id, e.target.value)
                                     }
-                                    placeholder="Ingrese el título de la subactividad"
+                                    placeholder="Enter the subactivity title"
                                     className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                                 />
                                 <div className="flex gap-2 mt-2">
@@ -258,13 +258,13 @@ function Activities() {
                                         onClick={() => handleConfirmSubactivity(input.id, subactivity.id)}
                                         className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 ease"
                                     >
-                                        Confirmar
+                                       Confirm
                                     </button>
                                     <button
                                         onClick={() => handleDeleteSubactivity(input.id, subactivity.id)}
                                         className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 ease"
                                     >
-                                        Eliminar
+                                            Delete
                                     </button>
                                 </div>
                             </div>
@@ -275,7 +275,7 @@ function Activities() {
                 {/* Lista de actividades confirmadas */}
                 {actividades.length > 0 && (
                     <div className="mt-4">
-                        <h3 className="font-bold text-lg mb-2">Actividades confirmadas:</h3>
+                        <h3 className="font-bold text-lg mb-2">Confirmed Activities:</h3>
                         <ul>
                             {actividades.map((actividad, index) => (
                                 <li key={index} className="text-gray-700">
@@ -300,7 +300,7 @@ function Activities() {
                     onClick={handleShowData}
                     className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease"
                 >
-                    Enviar lista de Actividades
+                    Submit Activity List
                 </button>
             </div>
         </div>

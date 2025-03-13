@@ -19,7 +19,7 @@ function Sondaje() {
         }));
     };
 
-    // Función para manejar el cambio en los inputs de tipo "desde-hasta"
+    // Función para manejar el cambio en los inputs de tipo "From-To"
     const handleRangeChange = (field, from, to) => {
         setSondaje((prev) => ({
             ...prev,
@@ -178,9 +178,9 @@ function Sondaje() {
     return (
         <div className="cartadiv">
             <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">Avance diario en muestrera DDH</div>
+                <div className="font-bold text-xl mb-2">Daily Progress in DDH Sampling</div>
                 <p className="text-gray-700 text-base">
-                    ... A continuación elija el pozo y rellene los datos
+                    ... Please select the drill hole and fill in the data below
                 </p>
             </div>
 
@@ -192,7 +192,7 @@ function Sondaje() {
                             className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md appearance-none cursor-pointer"
                             onChange={(e) => handleInputChange("pozo", e.target.value)}
                         >
-                            <option value="">Seleccione un pozo</option>
+                            <option value="">Select a well</option>
                             <option value="6">ZDDH00356</option>
                             <option value="7">ZDDH00358</option>
                         </select>
@@ -205,17 +205,17 @@ function Sondaje() {
 
             {/* LOGGEO/MTS LIBERADOS (metros) */}
             <div className="px-6 py-2 pb-3">
-                <p className="text-gray-700 text-base">LOGGEO/MTS LIBERADOS (metros):</p>
+                <p className="text-gray-700 text-base">LOGGING/RELEASED METERS (meters):</p>
                 <div className="flex gap-4">
                     <input
                         type="number"
-                        placeholder="Desde"
+                        placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("loggeo", parseFloat(e.target.value), sondaje.loggeo.to)}
                     />
                     <input
                         type="number"
-                        placeholder="Hasta"
+                        placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("loggeo", sondaje.loggeo.from, parseFloat(e.target.value))}
                     />
@@ -224,17 +224,17 @@ function Sondaje() {
 
             {/* CORTE (metros) */}
             <div className="px-6 space-y-3">
-                <p className="text-gray-700 text-base pb-4">CORTE (metros):</p>
+                <p className="text-gray-700 text-base pb-4">CUT (metros):</p>
                 <div className="flex gap-4">
                     <input
                         type="number"
-                        placeholder="Desde"
+                        placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("corte", parseFloat(e.target.value), sondaje.corte.to)}
                     />
                     <input
                         type="number"
-                        placeholder="Hasta"
+                        placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("corte", sondaje.corte.from, parseFloat(e.target.value))}
                     />
@@ -257,17 +257,17 @@ function Sondaje() {
 
             {/* MUESTREO (metros) */}
             <div className="px-6 space-y-3 pb-4">
-                <p className="text-gray-700 text-base pb-4">MUESTREO (metros):</p>
+                <p className="text-gray-700 text-base pb-4">SAMPLING (metros):</p>
                 <div className="flex gap-4">
                     <input
                         type="number"
-                        placeholder="Desde"
+                        placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("muestreo", parseFloat(e.target.value), sondaje.muestreo.to)}
                     />
                     <input
                         type="number"
-                        placeholder="Hasta"
+                        placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("muestreo", sondaje.muestreo.from, parseFloat(e.target.value))}
                     />
@@ -288,7 +288,7 @@ function Sondaje() {
                     onClick={handleSubmit}
                     className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease"
                 >
-                    Enviar Datos
+                   Submit Data
                 </button>
             </div>
         </div>

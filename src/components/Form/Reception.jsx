@@ -70,7 +70,7 @@ function Reception() {
     const handleSubmit = async (e) => {
 
 
-        
+
 
         console.log(reception);
 
@@ -78,7 +78,7 @@ function Reception() {
             from: reception.from,
             to: reception.to,
             well_id: reception.pozo,
-            date : getCurrentDate()
+            date: getCurrentDate()
         };
 
         try {
@@ -151,7 +151,7 @@ function Reception() {
                         from: test_tubes_meters.find(item => item.from !== null)?.from || null,
                         to: [...test_tubes_meters].reverse().find(item => item.to !== null)?.to || null,
                         reception_id: data.reception_id,
-                        from_meters: reception.from_meters|| 0,
+                        from_meters: reception.from_meters || 0,
                         to_meters: reception.to_meters || 0
                     }));
 
@@ -184,13 +184,13 @@ function Reception() {
     return (
         <div className="cartadiv">
             <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">Avance diario en muestrera DDH</div>
+                <div className="font-bold text-xl mb-2">Daily Progress in DDH Sample Room</div>
                 <p className="text-gray-700 text-base">
-                    ... A continuación elija el pozo y rellene los datos
+                    ... Below, select the well and fill in the data
                 </p>
             </div>
 
-            {/* Selección de pozo */}
+            {/* Well selection */}
             <div className="px-6">
                 <div className="w-full max-w-sm min-w-[200px]">
                     <div className="relative">
@@ -198,7 +198,7 @@ function Reception() {
                             className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded pl-3 pr-8 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-400 shadow-sm focus:shadow-md appearance-none cursor-pointer"
                             onChange={(e) => handleInputChange("pozo", e.target.value)}
                         >
-                            <option value="">Seleccione un pozo</option>
+                            <option value="">Select a well</option>
                             <option value="6">ZDDH00356</option>
                             <option value="7">ZDDH00358</option>
                         </select>
@@ -209,160 +209,159 @@ function Reception() {
                 </div>
             </div>
 
-            {/* RECEPCION DE MUESTRA (metros) */}
+            {/* SAMPLE RECEPTION (meters) */}
             <div className="px-6 py-2">
-                <p className="text-gray-700 text-base pb-4">RECEPCION DE MUESTRA (metros):</p>
+                <p className="text-gray-700 text-base pb-4">SAMPLE RECEPTION (meters):</p>
                 <div className="flex gap-4">
                     <input
                         type="number"
-                        placeholder="Desde"
+                        placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleInputChange("from", parseFloat(e.target.value))}
                     />
                     <input
                         type="number"
-                        placeholder="Hasta"
+                        placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleInputChange("to", parseFloat(e.target.value))}
                     />
                 </div>
             </div>
 
-            {/* FOTOGRAFIA (metros) */}
+            {/* PHOTOGRAPHY (meters) */}
             <div className="px-6">
-                <p className="text-gray-700 text-base pb-4">FOTOGRAFIA (metros):</p>
+                <p className="text-gray-700 text-base pb-4">PHOTOGRAPHY (meters):</p>
                 <div className="flex gap-4">
                     <input
                         type="number"
-                        placeholder="Desde"
+                        placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("photographs", parseFloat(e.target.value), null)}
                     />
                     <input
                         type="number"
-                        placeholder="Hasta"
+                        placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("photographs", null, parseFloat(e.target.value))}
                     />
                 </div>
             </div>
 
-            {/* REGULARIZADO (metros) */}
+            {/* REGULARIZED (meters) */}
             <div className="px-6">
-                <p className="text-gray-700 text-base pb-4">REGULARIZADO (metros):</p>
+                <p className="text-gray-700 text-base pb-4">REGULARIZED (meters):</p>
                 <div className="flex gap-4">
                     <input
                         type="number"
-                        placeholder="Desde"
+                        placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("regularized", parseFloat(e.target.value), null)}
                     />
                     <input
                         type="number"
-                        placeholder="Hasta"
+                        placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("regularized", null, parseFloat(e.target.value))}
                     />
                 </div>
             </div>
 
-            {/* RQD (metros) */}
+            {/* RQD (meters) */}
             <div className="px-6">
-                <p className="text-gray-700 text-base pb-4">RQD (metros):</p>
+                <p className="text-gray-700 text-base pb-4">RQD (meters):</p>
                 <div className="flex gap-4">
                     <input
                         type="number"
-                        placeholder="Desde"
+                        placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("rqd", parseFloat(e.target.value), null)}
                     />
                     <input
                         type="number"
-                        placeholder="Hasta"
+                        placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("rqd", null, parseFloat(e.target.value))}
                     />
                 </div>
             </div>
 
-            {/* SUSCEPTIBILIDAD (metros) */}
+            {/* SUSCEPTIBILITY (meters) */}
             <div className="px-6">
-                <p className="text-gray-700 text-base pb-4">SUSCEPTIBILIDAD (metros):</p>
+                <p className="text-gray-700 text-base pb-4">SUSCEPTIBILITY (meters):</p>
                 <div className="flex gap-4">
                     <input
                         type="number"
-                        placeholder="Desde"
+                        placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("susceptibility", parseFloat(e.target.value), null)}
                     />
                     <input
                         type="number"
-                        placeholder="Hasta"
+                        placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("susceptibility", null, parseFloat(e.target.value))}
                     />
                 </div>
             </div>
 
-            {/* N° DE PROBETAS (metros) */}
+            {/* NUMBER OF TEST TUBES (meters) */}
             <div className="px-6">
-                <p className="text-gray-700 text-base pb-4">N° DE PROBETAS (metros):</p>
+                <p className="text-gray-700 text-base pb-4">NUMBER OF TEST TUBES (meters):</p>
                 <div className="flex gap-4">
                     <input
                         type="number"
-                        placeholder="Desde"
+                        placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("test_tubes_meters", parseFloat(e.target.value), null)}
                     />
                     <input
                         type="number"
-                        placeholder="Hasta"
+                        placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("test_tubes_meters", null, parseFloat(e.target.value))}
                     />
                 </div>
             </div>
 
-            {/* METROS*/}
+            {/* METERS */}
             <div className="px-6">
-                <p className="text-gray-700 text-base pb-4">METROS :</p>
+                <p className="text-gray-700 text-base pb-4">METERS:</p>
                 <div className="flex gap-4">
                     <input
                         type="number"
-                        placeholder="Desde"
+                        placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleInputChange("from_meters", parseFloat(e.target.value))}
-                       
                     />
                     <input
                         type="number"
-                        placeholder="Hasta"
+                        placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleInputChange("to_meters", parseFloat(e.target.value))}
-                        
                     />
                 </div>
             </div>
-            {/* OBSERVACION */}
+
+            {/* OBSERVATION */}
             <div className="px-6 py-4">
-                <p className="text-gray-700 text-base pb-4">OBSERVACION:</p>
+                <p className="text-gray-700 text-base pb-4">OBSERVATION:</p>
                 <div className="flex gap-4">
                     <input
                         type="text"
-                        placeholder="Actualice la observación del pozo"
+                        placeholder="Update the well observation"
                         className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleInputChange("observation", e.target.value)}
                     />
                 </div>
             </div>
 
-            {/* Botón para enviar datos */}
+            {/* Button to submit data */}
             <div className="px-6 py-4">
                 <button
                     onClick={handleSubmit}
                     className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease"
                 >
-                    Enviar Datos
+                    Submit Data
                 </button>
             </div>
         </div>

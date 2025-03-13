@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 import Project from '@/components/Form/Project'
 //import SafetyTalk from '@/components/SafetyTalk'
 import Activities from '@/components/Form/Activities'
@@ -37,16 +37,16 @@ function Page() {
         }
     };
 
-    
 
-   
+
+
     const handleGenerateReport = () => {
-        
+
         const reportId = localStorage.getItem('report_id');
-        
-        
+
+
         router.push(`/pages/report/${reportId}`);
-      };
+    };
 
     return (
         <div className='p-10 bg-slate-200  flex space-x-5'>
@@ -63,9 +63,9 @@ function Page() {
             <div className='flex-col space-y-5'>
                 <div className="cartadiv">
                     <div className="px-6 py-4">
-                        <div className="font-bold text-xl mb-2">Tablas</div>
+                        <div className="font-bold text-xl mb-2">Tables</div>
                         <p className="text-gray-700 text-base">
-                            ... A continuación eliga la tabla
+                            ... Please select a table below
                         </p>
                     </div>
                     <div className="px-6 pt-4 pb-4">
@@ -76,9 +76,9 @@ function Page() {
                                     value={selectedComponent}
                                     onChange={handleSelectChange}
                                 >
-                                    <option value="1">AVANCE DIARIO EN MUESTRERA DDH </option>
-                                    <option value="2">METROS DE SONDAJE DDH </option>
-                                    <option value="3">ENVIO DE MUESTRAS AL LABORATORIO</option>
+                                    <option value="1">DAILY PROGRESS IN DDH SAMPLE ROOM</option>
+                                    <option value="2">DRILLING METERS DDH</option>
+                                    <option value="3">SAMPLE SHIPPING TO LABORATORY</option>
                                 </select>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.2" stroke="currentColor" className="h-5 w-5 ml-1 absolute top-2.5 right-2.5 text-slate-700">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
@@ -92,11 +92,11 @@ function Page() {
                     <div className="px-6 py-4">
 
                         <p className="text-gray-700 text-base">
-                            ... If are you sure ? send to the report
+                            ... Are you sure? Send to the report
                         </p>
                     </div>
                     <div className="px-6 py-4">
-                    <button onClick={handleGenerateReport} type="button" className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Generarl Reporte</button>
+                        <button onClick={handleGenerateReport} type="button" className="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Generate Report</button>
                     </div>
                 </div>
 

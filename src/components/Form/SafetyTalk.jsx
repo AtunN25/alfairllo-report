@@ -135,17 +135,17 @@ function SafetyTalk() {
 
     return (
         <div className="cartadiv">
-            <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">Charla</div>
-                <p className="text-gray-700 text-base">
-                    Muy buenas ... A continuación ingrese los datos generales respecto a la Jornada de Charla
-                </p>
-            </div>
+             <div className="px-6 py-4">
+        <div className="font-bold text-xl mb-2">Talk</div>
+        <p className="text-gray-700 text-base">
+            Hello... Please enter the general information regarding the Talk session below.
+        </p>
+    </div>
             <div className="px-6 pt-4 pb-4">
                 <form onSubmit={handleSubmit}>
                     {/* Input para el supervisor */}
                     <div>
-                        <p className="text-gray-700 text-base">Encargado Charla:</p>
+                        <p className="text-gray-700 text-base">Talk Supervisor:</p>
                         <input
                             className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                             placeholder="Supervisor"
@@ -158,10 +158,10 @@ function SafetyTalk() {
 
                     {/* Input para el tiempo de duración */}
                     <div>
-                        <p className="text-gray-700 text-base">Tiempo de duración:</p>
+                        <p className="text-gray-700 text-base">Duration Time:</p>
                         <input
                             className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                            placeholder="Tiempo de duración"
+                            placeholder="Duration Time"
                             name="time"
                             value={staticData.time}
                             onChange={(e) => setStaticData({ ...staticData, time: e.target.value })}
@@ -176,7 +176,7 @@ function SafetyTalk() {
                         onClick={handleAddActivity}
                         className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 ease mt-4"
                     >
-                        Agregar subtítulo
+                        Add Subtitle
                     </button>
 
                     {/* Inputs para subtítulos dinámicos */}
@@ -195,14 +195,14 @@ function SafetyTalk() {
                                     onClick={() => handleConfirmActivity(input.id)}
                                     className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300 ease"
                                 >
-                                    Confirmar
+                                    Confirm
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => handleDeleteActivity(input.id)}
                                     className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300 ease"
                                 >
-                                    Eliminar
+                                    Delete
                                 </button>
                             </div>
                         </div>
@@ -211,7 +211,7 @@ function SafetyTalk() {
                     {/* Lista de actividades confirmadas */}
                     {actividades.length > 0 && (
                         <div className="mt-4">
-                            <h3 className="font-bold text-lg mb-2">Actividades confirmadas:</h3>
+                            <h3 className="font-bold text-lg mb-2">Confirmed Activities:</h3>
                             <ul>
                                 {actividades.map((actividad) => (
                                     <li key={actividad.id} className="text-gray-700">
@@ -227,7 +227,7 @@ function SafetyTalk() {
                         type="submit"
                         className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease"
                     >
-                        Enviar Datos de la Charla
+                         Submit Talk Data
                     </button>
                 </form>
             </div>

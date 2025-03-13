@@ -19,24 +19,24 @@ function Project() {
 
         // Crear un objeto con los datos del formulario
         const formData = {
-            date: getCurrentDate(), 
-            overseer: e.target.overseer.value, 
-            email: e.target.email.value, 
-            project_id: 3 
+            date: getCurrentDate(),
+            overseer: e.target.overseer.value,
+            email: e.target.email.value,
+            project_id: 3
         };
 
-        console.log(formData); 
+        console.log(formData);
 
         try {
             const response = await fetch('http://localhost:3000/api/report', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json' 
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(formData) 
+                body: JSON.stringify(formData)
             });
 
-            const data = await response.json(); 
+            const data = await response.json();
 
             if (response.ok) {
                 alert(`Reporte enviado exitosamente. ID del reporte: ${data.report_id}`);
@@ -54,25 +54,26 @@ function Project() {
     return (
         <div className="cartadiv">
 
-            
+
             {reportId && (
-                    <div className=" p-4 bg-green-100 border border-green-400 text-green-700 rounded-md">
-                        <p>Reporte creado exitosamente. ID del reporte: <strong>{reportId}</strong></p>
-                    </div>
+                <div className="p-4 bg-green-100 border border-green-400 text-green-700 rounded-md">
+                    <p>Report successfully created. Report ID: <strong>{reportId}</strong></p>
+                </div>
             )}
 
             <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">Reporte Diario de Actividades</div>
+                <div className="font-bold text-xl mb-2">Daily Activity Report</div>
                 <p className="text-gray-700 text-base">
-                    Muy buenas ... A continuación ingrese los datos generales del reporte
+                    Good day... Please enter the general report information below.
                 </p>
             </div>
+
             <div className="px-6 pt-4 pb-4">
                 <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
                     {getCurrentDate()} {/* Fecha actual */}
                 </span>
                 <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                    Proyecto el Zorro {/* Nombre del proyecto */}
+                    Proyect el Zorro {/* Nombre del proyecto */}
                 </span>
 
                 <form onSubmit={handleSubmit}>
@@ -87,7 +88,7 @@ function Project() {
                     </div>
 
                     <div>
-                        <p className="text-gray-700 text-base">Email del Supervisor:</p>
+                        <p className="text-gray-700 text-base">Supervisor's Email:</p>
                         <input
                             className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                             placeholder="Email del Supervisor"
@@ -100,7 +101,7 @@ function Project() {
                         type="submit"
                         className="mt-4  bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease"
                     >
-                        Enviar Datos del Supervisor
+                        Submit Supervisor Information
                     </button>
                 </form>
             </div>
