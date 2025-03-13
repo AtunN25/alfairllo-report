@@ -242,12 +242,15 @@ function populateTemplate(html: string, data: ProjectData): string {
               </tr>
             </thead>
            <tbody>
+           
            ${data.wells.flatMap(well =>
+            
             (well.loggeo ?? []).map(loggeo => `
               <tr>
                 <td>${well.company.name}</td>
                 <td>${well.date}</td>
                 <td>${well.name}</td>
+                <!-- ${loggeo} --> <!-- Aquí podrías usar loggeo si lo necesitas -->
               </tr>
             `)
           ).join("")}
@@ -297,6 +300,7 @@ function populateTemplate(html: string, data: ProjectData): string {
           <td>${well.company.name}</td>
           <td>${well.date}</td>
           <td>${well.name}</td>
+          <!-- ${cut} --> <!-- Aquí podrías usar loggeo si lo necesitas -->
         </tr>
       `)
     ).join("")}
@@ -362,6 +366,7 @@ function populateTemplate(html: string, data: ProjectData): string {
         <tr>
           <td>${well.company.name}</td>
           <td>${well.date}</td>
+           <!-- ${survey} --> <!-- Aquí podrías usar survey si lo necesitas -->
         </tr>
       `)
     ).join("")}
@@ -603,6 +608,7 @@ function populateTemplate(html: string, data: ProjectData): string {
                         <td>${well.company.name}</td>
                         <td>${well.date}</td>
                         <td>${well.name}</td>
+                        <!-- ${reception} --> <!-- Aquí podrías usar survey si lo necesitas -->
                       </tr>
                     `).join("")
                   ).join("")}
