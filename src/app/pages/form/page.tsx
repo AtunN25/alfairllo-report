@@ -33,7 +33,7 @@ function Page() {
             case '3':
                 return <Laboratory />;
             default:
-                return <Laboratory />;
+                return <Reception />;
         }
     };
 
