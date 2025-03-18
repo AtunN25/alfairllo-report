@@ -1079,7 +1079,7 @@ export async function GET(req: Request) {
 
             
           )
-          FROM Well w WHERE w.id IN (6, 7)
+          FROM Well w 
         )
       ) AS json_data
       FROM 
