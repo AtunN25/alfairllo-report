@@ -112,6 +112,17 @@ interface ProjectData {
         status: string | null;
       }[];
     }[];
+    reloggeo: {
+      id: number;
+      priority: string | null;
+      programed: string | null;
+      from: number | null;
+      to: number | null;
+      relogging: number | null;
+      geologist: string | null;
+      date: string | null;
+      observation: string | null;
+    }[];
   }[];
 }
 
@@ -120,7 +131,7 @@ interface ProjectData {
 function populateTemplate(html: string, data: ProjectData): string {
   console.log("📌 Data recibida:", JSON.stringify(data, null, 2));
 
-  
+
   // Extraer datos generales
   const reportDate = data.project.reports.length > 0 ? data.project.reports[0].date : "Fecha no disponible";
   const overseer = data.project.reports.length > 0 ? data.project.reports[0].overseer : "Supervisor no disponible";
@@ -130,6 +141,9 @@ function populateTemplate(html: string, data: ProjectData): string {
 
   const time = data.project.reports.length > 0 ? data.project.reports[0].safety_talks[0].time : "tiempo no disponible";
   const speaker = data.project.reports.length > 0 ? data.project.reports[0].safety_talks[0].speaker : "Supervisor no disponible";
+
+
+
 
   console.log(data.project.reports[0])
   // Reemplazar placeholders generales
@@ -244,8 +258,8 @@ function populateTemplate(html: string, data: ProjectData): string {
            <tbody>
            
            ${data.wells.flatMap(well =>
-            
-            (well.loggeo ?? []).map(loggeo => `
+
+      (well.loggeo ?? []).map(loggeo => `
               <tr>
                 <td>${well.company.name}</td>
                 <td>${well.date}</td>
@@ -253,7 +267,7 @@ function populateTemplate(html: string, data: ProjectData): string {
                 <!-- ${loggeo} --> <!-- Aquí podrías usar loggeo si lo necesitas -->
               </tr>
             `)
-          ).join("")}
+    ).join("")}
         </tbody>
           </table>
 
@@ -603,7 +617,7 @@ function populateTemplate(html: string, data: ProjectData): string {
                   <tbody>
                   
                   ${data.wells.flatMap(well =>
-                    (well.receptions ?? []).map(reception => `
+      (well.receptions ?? []).map(reception => `
                       <tr>
                         <td>${well.company.name}</td>
                         <td>${well.date}</td>
@@ -611,7 +625,7 @@ function populateTemplate(html: string, data: ProjectData): string {
                         <!-- ${reception} --> <!-- Aquí podrías usar survey si lo necesitas -->
                       </tr>
                     `).join("")
-                  ).join("")}
+    ).join("")}
                   </tbody>
                 </table>
               </td>
@@ -857,6 +871,65 @@ function populateTemplate(html: string, data: ProjectData): string {
     populatedHtml = populatedHtml.replace("{{receptions_tables}}", "<p>No hay datos de recepciones disponibles</p>");
   }
 
+
+  // Generar dinámicamente la tabla de reloggeo
+  if (data.wells && data.wells.length > 0) {
+    const reloggeoHtml = `
+    <div>
+      <div>
+        <table border="1">
+          <thead>
+            <tr>
+              <th colspan="9">DATOS DE RELOGGEO</th>
+            </tr>
+            <tr>
+              <th>POZO</th> <!-- Nueva columna para el nombre del pozo -->
+              <th>PRIORIDAD</th>
+              <th>PROGRAMADO</th>
+              <th>DESDE</th>
+              <th>HASTA</th>
+              <th>RELOGGING</th>
+              <th>GEÓLOGO</th>
+              <th>FECHA</th>
+              <th>OBSERVACIÓN</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.wells
+        .flatMap((well) =>
+          (well.reloggeo ?? []).map(
+            (relog) => `
+                  <tr>
+                    <td>${well.name}</td> <!-- Nombre del pozo -->
+                    <td>${relog.priority}</td>
+                    <td>${relog.programed}</td>
+                    <td>${relog.from}</td>
+                    <td>${relog.to}</td>
+                    <td>${relog.relogging}</td>
+                    <td>${relog.geologist}</td>
+                    <td>${relog.date}</td>
+                    <td>${relog.observation}</td>
+                  </tr>
+                `
+          )
+        )
+        .join("")}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+    // Reemplazar el placeholder {{reloggeo_tables}} con las tablas generadas
+    populatedHtml = populatedHtml.replace("{{reloggeo_tables}}", reloggeoHtml);
+  } else {
+    // Si no hay datos de reloggeo, mostrar un mensaje
+    populatedHtml = populatedHtml.replace(
+      "{{reloggeo_tables}}",
+      "<p>No hay datos de reloggeo disponibles</p>"
+    );
+  }
+
   return populatedHtml;
 }
 
@@ -1074,7 +1147,24 @@ export async function GET(req: Request) {
                 )
                 FROM Lab_Shipment ls
                 WHERE ls.well_id = w.id
-              )
+              ),
+              'reloggeo', (  -- Nueva sección para Reloggeo
+                    SELECT json_agg(
+                        json_build_object(
+                            'id', rl.id,
+                            'priority', rl.priority,
+                            'programed', rl.programed,
+                            'from', rl."from",
+                            'to', rl."to",
+                            'relogging', rl.relogging,
+                            'geologist', rl.geologist,
+                            'date', rl.date,
+                            'observation', rl.observation
+                        )
+                    )
+                    FROM Reloggeo rl
+                    WHERE rl.well_id = w.id  AND rl.Date = ${currentDate} -- Filtrar por well_id
+                )
             )
 
             
