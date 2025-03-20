@@ -82,7 +82,7 @@ function SafetyTalk() {
         console.log(JSON.stringify(safety_talk, null, 2));
 
         try {
-            const response = await fetch('http://localhost:3000/api/safety_talk', {
+            const response = await fetch('/api/safety_talk', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -106,7 +106,7 @@ function SafetyTalk() {
                             safety_talk_id: data.safety_talk_id
                         };
 
-                        const subtitleResponse = await fetch('http://localhost:3000/api/safety_talk_Subtitle', {
+                        const subtitleResponse = await fetch('/api/safety_talk_Subtitle', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'

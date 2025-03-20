@@ -28,7 +28,7 @@ function Project() {
         console.log(formData);
 
         try {
-            const response = await fetch('http://localhost:3000/api/report', {
+            const response = await fetch('/api/report', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

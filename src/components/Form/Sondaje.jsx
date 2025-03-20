@@ -68,7 +68,7 @@ function Sondaje() {
             })
         )
         try {
-            const response = await fetch('http://localhost:3000/api/loggeo', {
+            const response = await fetch('/api/loggeo', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -104,7 +104,7 @@ function Sondaje() {
         }))
 
         try {
-            const response = await fetch('http://localhost:3000/api/cut', {
+            const response = await fetch('/api/cut', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -143,7 +143,7 @@ function Sondaje() {
             })
         )
         try {
-            const response = await fetch('http://localhost:3000/api/samply_surverys', {
+            const response = await fetch('/api/samply_surverys', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

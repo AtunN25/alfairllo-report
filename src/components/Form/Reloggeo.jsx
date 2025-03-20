@@ -136,7 +136,7 @@ function Reloggeo() {
 
       console.log(JSON.stringify(reloggeo))
 
-      const response = await fetch('http://localhost:3000/api/reloggeo', {
+      const response = await fetch('/api/reloggeo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -73,7 +73,7 @@ function Laboratory() {
         })); // Mostrar los datos en la consola
 
         try {
-            const response = await fetch('http://localhost:3000/api/lab_shipment', {
+            const response = await fetch('/api/lab_shipment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -102,7 +102,7 @@ function Laboratory() {
                     lab_shipment_id: datalab.laboratorio_id
                 }))
                 try {
-                    const response = await fetch('http://localhost:3000/api/sample_shipment', {
+                    const response = await fetch('/api/sample_shipment', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

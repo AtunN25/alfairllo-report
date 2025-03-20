@@ -45,7 +45,7 @@ function Reception() {
     const sendDataToTable = async (tableName, body) => {
         console.log(JSON.stringify(body))
         try {
-            const response = await fetch(`http://localhost:3000/api/${tableName}`, {
+            const response = await fetch(`/api/${tableName}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -87,7 +87,7 @@ function Reception() {
         try {
             console.log(JSON.stringify(receptionPost))
 
-            const response = await fetch('http://localhost:3000/api/reception', {
+            const response = await fetch('/api/reception', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
