@@ -43,6 +43,7 @@ function Reception() {
 
     // Función para enviar datos a cualquier tabla
     const sendDataToTable = async (tableName, body) => {
+        console.log(JSON.stringify(body))
         try {
             const response = await fetch(`http://localhost:3000/api/${tableName}`, {
                 method: 'POST',
@@ -98,7 +99,7 @@ function Reception() {
 
             if (response.ok) {
                 alert(`reception enviado exitosamente. ID de reception: ${data.reception_id}`);
-
+                console.log('los valores enviados por reception son :',data)
                 // Enviar cada subtitle con el safety_talk_id
 
                 const photographs = reception.photographs;
