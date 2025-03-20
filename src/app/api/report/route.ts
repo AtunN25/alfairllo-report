@@ -29,3 +29,20 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
+
+export async function GET() {
+    try {
+        const sql = neon(process.env.DATABASE_URL as string);
+
+        // Obtener todos los reportes de la base de datos
+        const reports = await sql`
+            SELECT * FROM report
+        `;
+
+        // Retornar los reportes en la respuesta
+        return NextResponse.json({ reports });
+    } catch (error) {
+        console.error('Error fetching reports:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
+}
