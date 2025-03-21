@@ -167,8 +167,9 @@ function populateTemplate(html: string, data: ProjectData): string {
   console.log("📌 time:", time);
   console.log("📌 speaker:", speaker);
 
-  const imagen = dailyActivities[0].picture;
+  const imagen = dailyActivities[0]?.picture || null;
   console.log("📌 imagen:", imagen);
+
   // Reemplazar charla de seguridad (asumiendo que solo hay un orador)
   if (safetyTalks.length > 0) {
     let safetyTalkHtml = "";
