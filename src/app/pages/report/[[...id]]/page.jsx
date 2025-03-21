@@ -74,11 +74,11 @@ function Page({ params }) {
 
 
 
-      <div className="max-w-sm p-6  bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 space-y-4 flex flex-col">
+      <div className="max-w-sm p-6  border  rounded-lg shadow-sm bg-gray-800 border-gray-700 space-y-4 flex flex-col">
         <a href="#">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Generate PDF Report</h5>
+          <h5 className="mb-2 text-2xl font-bold tracking-tight  text-white">Generate PDF Report</h5>
         </a>
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">If you want to generate previous reports, change the value to the ID of the report you want to generate...</p>
+        <p className="mb-3 font-normal  text-gray-400">If you want to generate previous reports, change the value to the ID of the report you want to generate...</p>
 
         <input
           type="number"
@@ -99,7 +99,7 @@ function Page({ params }) {
         />
 
 
-        <button onClick={handleDownloadPDF} disabled={loading} className="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+        <button onClick={handleDownloadPDF} disabled={loading} className="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none  focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
           {loading ? 'Generating PDF...' : 'Download PDF'}
         </button>
       </div>
@@ -107,8 +107,8 @@ function Page({ params }) {
 
 
       <div className="relative overflow-x-auto flex-col border rounded-lg">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <table className="w-full text-sm text-left rtl:text-right  text-gray-400">
+          <thead className="text-xs  uppercase  bg-gray-700 text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3">
                 Id report
@@ -131,12 +131,12 @@ function Page({ params }) {
             {reports.map((report) => (
               <tr
                 key={report.id}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200"
+                className=" border-b bg-gray-800  border-gray-200"
               >
                  <td className="px-6 py-4">
                   {report.id}
                 </td>
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th scope="row" className="px-6 py-4 font-medium  whitespace-nowrap text-white">
                   {formatDate(report.date)}
                 </th>
                 <td className="px-6 py-4">

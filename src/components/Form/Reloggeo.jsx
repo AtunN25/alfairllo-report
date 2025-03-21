@@ -88,6 +88,7 @@ function Reloggeo() {
       });
 
       setMessage(`Well created successfully with ID: ${newWell.id}`);
+      
 
 
       setWellsGet((prevWells) => [...prevWells, newWell]);
@@ -149,6 +150,7 @@ function Reloggeo() {
       }
   
       const data = await response.json();
+      alert('data sent correctly ')
       console.log('Success:', data);
     } catch (error) {
       console.error('Error:', error);

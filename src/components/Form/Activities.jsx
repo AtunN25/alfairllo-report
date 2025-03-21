@@ -64,6 +64,7 @@ function Activities() {
             const result = await response.json();
             if (response.ok) {
                 setMessage('Actividad diaria agregada con éxito');
+                alert('Actividad diaria agregada con éxito')
             } else {
                 setMessage(result.error || 'Error al agregar la actividad');
             }
