@@ -124,7 +124,7 @@ function Laboratory() {
 
                     if (response.ok) {
                         console.log('sample_shipment enviado exitosamente.');
-                        alert('sample_shipment enviado exitosamente.');
+                        alert('sample_shipment sent successfully.');
                     } else {
                         alert('Error al enviar el sample_shipment');
                     }
