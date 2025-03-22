@@ -21,6 +21,10 @@ cloudinary.config({
     api_secret: 'zC4bHIffnTtrHr36qy4zMRep2xk',
 });
 
+interface CloudinaryResponse {
+    secure_url: string;
+}
+
 export async function POST(req: Request) {
     try {
         const data = await req.formData();
@@ -49,21 +53,21 @@ export async function POST(req: Request) {
         const buffer = Buffer.from(bytes);
 
         // Subir la imagen a Cloudinary directamente desde el buffer
-        const res = await new Promise((resolve, reject) => {
+        const res = await new Promise<CloudinaryResponse>((resolve, reject) => {
             cloudinary.uploader.upload_stream(
                 { folder: 'actividades' }, // Opcional: especifica una carpeta en Cloudinary
                 (error, result) => {
                     if (error) {
                         reject(error);
                     } else {
-                        resolve(result);
+                        resolve(result as CloudinaryResponse);
                     }
                 }
             ).end(buffer);
         });
 
         // Obtener la URL de la imagen subida
-        const imageUrl = (res as any).secure_url;
+        const imageUrl = res.secure_url;
 
         // Conectar a la base de datos
         const sql = neon(process.env.DATABASE_URL as string);
