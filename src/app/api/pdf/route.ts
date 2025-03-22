@@ -1,6 +1,9 @@
 // src/app/api/pdf/route.ts
 import { NextResponse } from 'next/server';
-import puppeteer from 'puppeteer';
+
+import puppeteer from 'puppeteer-core'; 
+import chromium from '@sparticuz/chromium'
+
 import path from 'path';
 import fs from 'fs';
 import { neon } from '@neondatabase/serverless';
@@ -1191,21 +1194,25 @@ export async function GET(req: Request) {
 
     console.log(jsonData);
 
-    // Ruta al archivo HTML dentro de src/components/pdf/
+    
     const htmlFilePath = path.join(process.cwd(), 'src', 'components', 'pdf', 'template.html');
     let htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
     htmlContent = populateTemplate(htmlContent, jsonData);
 
-    // Iniciar Puppeteer
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-
-    // Cargar el contenido HTML en la página
-    await page.setContent(htmlContent, {
-      waitUntil: 'networkidle0', // Esperar a que se carguen todos los recursos
+   
+    const browser = await puppeteer.launch({
+      args: chromium.args, 
+      executablePath: await chromium.executablePath(), 
+      headless: true, 
     });
 
-    // Generar el PDF
+    const page = await browser.newPage();
+
+  
+    await page.setContent(htmlContent, {
+      waitUntil: 'networkidle0', 
+    });
+
     const pdfBuffer = await page.pdf({
       format: 'A4',
       margin: {
