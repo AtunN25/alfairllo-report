@@ -1,7 +1,7 @@
 // src/app/api/pdf/route.ts
 import { NextResponse } from 'next/server';
 
-import puppeteer from 'puppeteer-core';
+import puppeteer from 'puppeteer-core'; 
 import chromium from '@sparticuz/chromium'
 
 import path from 'path';
@@ -145,9 +145,6 @@ function populateTemplate(html: string, data: ProjectData): string {
   const time = data.project.reports.length > 0 ? data.project.reports[0].safety_talks[0].time : "tiempo no disponible";
   const speaker = data.project.reports.length > 0 ? data.project.reports[0].safety_talks[0].speaker : "Supervisor no disponible";
 
-
-
-
   console.log(data.project.reports[0])
   // Reemplazar placeholders generales
   let populatedHtml = html
@@ -266,7 +263,7 @@ function populateTemplate(html: string, data: ProjectData): string {
       (well.loggeo ?? []).map(loggeo => `
               <tr>
                 <td>${well.company.name}</td>
-                <td>${well.date}</td>
+                <td>${reportDate}</td>
                 <td>${well.name}</td>
                 <!-- ${loggeo} --> <!-- Aquí podrías usar loggeo si lo necesitas -->
               </tr>
@@ -316,7 +313,7 @@ function populateTemplate(html: string, data: ProjectData): string {
       (well.cut ?? []).map(cut => `
         <tr>
           <td>${well.company.name}</td>
-          <td>${well.date}</td>
+          <td>${reportDate}</td>
           <td>${well.name}</td>
           <!-- ${cut} --> <!-- Aquí podrías usar loggeo si lo necesitas -->
         </tr>
@@ -383,7 +380,7 @@ function populateTemplate(html: string, data: ProjectData): string {
       (well.sampling_surveys ?? []).map(survey => `
         <tr>
           <td>${well.company.name}</td>
-          <td>${well.date}</td>
+          <td>${reportDate}</td>
           <td>${well.name}</td>
            <!-- ${survey} --> <!-- Aquí podrías usar survey si lo necesitas -->
         </tr>
@@ -447,27 +444,27 @@ function populateTemplate(html: string, data: ProjectData): string {
     populatedHtml = populatedHtml.replace("{{wells_tables}}", "<p>No hay datos de pozos disponibles</p>");
   }
 
-  // Generar dinámicamente la tabla de laboratorios
-  if (data.wells && data.wells.length > 0) {
-    // Calcular los totales
-    let totalMuestras = 0;
-    let totalMetros = 0;
+// Generar dinámicamente la tabla de laboratorios
+if (data.wells && data.wells.length > 0) {
+  // Calcular los totales
+  let totalMuestras = 0;
+  let totalMetros = 0;
+  
+  const sampleRows = data.wells.flatMap(well =>
+    (well.lab_shipments ?? []).flatMap(shipment =>
+      (shipment.sample_shipments ?? []).map(sample => {
+        const muestras = (sample.trc_to ?? 0) - (sample.trc_from ?? 0);
+        const metros = (sample.meters_to ?? 0) - (sample.meters_from ?? 0);
+        
+        totalMuestras += muestras;
+        totalMetros += metros;
+        
+        return { ...sample, wellName: well.name, wellDate: well.date }; // Agregamos los datos del pozo
+      })
+    )
+  );
 
-    const sampleRows = data.wells.flatMap(well =>
-      (well.lab_shipments ?? []).flatMap(shipment =>
-        (shipment.sample_shipments ?? []).map(sample => {
-          const muestras = (sample.trc_to ?? 0) - (sample.trc_from ?? 0);
-          const metros = (sample.meters_to ?? 0) - (sample.meters_from ?? 0);
-
-          totalMuestras += muestras;
-          totalMetros += metros;
-
-          return { ...sample, wellName: well.name, wellDate: well.date }; // Agregamos los datos del pozo
-        })
-      )
-    );
-
-    const labHtml = `
+  const labHtml = `
     <div>
       <div>
         <table border="1" style="width: 100%;">
@@ -501,7 +498,7 @@ function populateTemplate(html: string, data: ProjectData): string {
           <tbody>
             ${sampleRows.map(sample => `
               <tr>
-                <td>${sample.wellDate}</td> <!-- Fecha del pozo -->
+                <td>${reportDate}</td> <!-- Fecha del pozo -->
                 <td>${sample.wellName}</td> <!-- Nombre del pozo -->
                 <td>${sample.trc}</td>
                 <td>${sample.trc_from}</td>
@@ -525,10 +522,10 @@ function populateTemplate(html: string, data: ProjectData): string {
     </div>
   `;
 
-    populatedHtml = populatedHtml.replace("{{lab_tables}}", labHtml);
-  } else {
-    populatedHtml = populatedHtml.replace("{{lab_tables}}", "<p>No hay datos de laboratorio disponibles</p>");
-  }
+  populatedHtml = populatedHtml.replace("{{lab_tables}}", labHtml);
+} else {
+  populatedHtml = populatedHtml.replace("{{lab_tables}}", "<p>No hay datos de laboratorio disponibles</p>");
+}
 
   // Generar dinámicamente las tablas de recepciones
   if (data.wells && data.wells.length > 0) {
@@ -569,7 +566,7 @@ function populateTemplate(html: string, data: ProjectData): string {
       (well.receptions ?? []).map(reception => `
                       <tr>
                         <td>${well.company.name}</td>
-                        <td>${well.date}</td>
+                        <td>${reportDate}</td>
                         <td>${well.name}</td>
                         <!-- ${reception} --> <!-- Aquí podrías usar survey si lo necesitas -->
                       </tr>
@@ -892,20 +889,32 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Project ID is required" }, { status: 400 });
     }
 
-    const getCurrentDate = () => {
+    /*const getCurrentDate = () => {
       const today = new Date();
       const year = today.getFullYear();
       const month = String(today.getMonth() + 1).padStart(2, '0');
       const day = String(today.getDate()).padStart(2, '0');
       return `${year}-${month}-${day}`;
-    };
+    };*/
 
-    const currentDate = getCurrentDate(); // Ejemplo: "2025-02-25"
-    console.log(currentDate)
-
-    // Conectar a la base de datos y obtener los datos
     const sql = neon(process.env.DATABASE_URL as string);
+
+    const reportInfo = await sql`
+      SELECT date as report_date 
+      FROM report 
+      WHERE id = ${project_id}
+      LIMIT 1
+    `;
+
+    if (!reportInfo || reportInfo.length === 0) {
+      return NextResponse.json({ error: "Report not found" }, { status: 404 });
+    }
+
+    const report_date = reportInfo[0].report_date;
+
+   
     const result = await sql`
+      
       SELECT json_build_object(
         'project', json_build_object(
           'id', p.id,
@@ -1028,7 +1037,7 @@ export async function GET(req: Request) {
                   )
                 )
                 FROM Reception rec
-                WHERE rec.well_id = w.id AND rec.date = ${currentDate}
+                WHERE rec.well_id = w.id AND rec.date = ${report_date}
               ),
               'loggeo', (
                 SELECT json_agg(
@@ -1040,7 +1049,7 @@ export async function GET(req: Request) {
                   )
                 )
                 FROM Loggeo l
-                WHERE l.well_id = w.id AND l.Date = ${currentDate}
+                WHERE l.well_id = w.id AND l.Date = ${report_date}
               ),
               'cut', (
                 SELECT json_agg(
@@ -1054,7 +1063,7 @@ export async function GET(req: Request) {
                   )
                 )
                 FROM Cut c
-                WHERE c.well_id = w.id AND c.Date = ${currentDate}
+                WHERE c.well_id = w.id AND c.Date = ${report_date}
               ),
               'sampling_surveys', (
                 SELECT json_agg(
@@ -1067,7 +1076,7 @@ export async function GET(req: Request) {
                   )
                 )
                 FROM Sampling_surveys ss
-                WHERE ss.well_id = w.id AND ss.Date = ${currentDate}
+                WHERE ss.well_id = w.id AND ss.Date = ${report_date}
               ),
               'lab_shipments', (
                 SELECT json_agg(
@@ -1090,7 +1099,7 @@ export async function GET(req: Request) {
                         )
                       )
                       FROM Sample_Shipment samp
-                      WHERE samp.lab_shipment_id = ls.id AND samp.date = ${currentDate}
+                      WHERE samp.lab_shipment_id = ls.id AND samp.date = ${report_date}
                     )
                   )
                 )
@@ -1112,7 +1121,7 @@ export async function GET(req: Request) {
                         )
                     )
                     FROM Reloggeo rl
-                    WHERE rl.well_id = w.id  AND rl.Date = ${currentDate} -- Filtrar por well_id
+                    WHERE rl.well_id = w.id  AND rl.Date = ${report_date} -- Filtrar por well_id
                 )
             )
 
@@ -1139,23 +1148,23 @@ export async function GET(req: Request) {
 
     console.log(jsonData);
 
-
+    
     const htmlFilePath = path.join(process.cwd(), 'src', 'components', 'pdf', 'template.html');
     let htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
     htmlContent = populateTemplate(htmlContent, jsonData);
 
-
+   
     const browser = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath(),
-      headless: true,
+      args: chromium.args, 
+      executablePath: await chromium.executablePath(), 
+      headless: true, 
     });
 
     const page = await browser.newPage();
 
-
+  
     await page.setContent(htmlContent, {
-      waitUntil: 'networkidle0',
+      waitUntil: 'networkidle0', 
     });
 
     const pdfBuffer = await page.pdf({
