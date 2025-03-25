@@ -384,6 +384,7 @@ function populateTemplate(html: string, data: ProjectData): string {
         <tr>
           <td>${well.company.name}</td>
           <td>${well.date}</td>
+          <td>${well.name}</td>
            <!-- ${survey} --> <!-- Aquí podrías usar survey si lo necesitas -->
         </tr>
       `)
@@ -446,144 +447,88 @@ function populateTemplate(html: string, data: ProjectData): string {
     populatedHtml = populatedHtml.replace("{{wells_tables}}", "<p>No hay datos de pozos disponibles</p>");
   }
 
-  // Generar dinámicamente la tabla de laboratorios
-  if (data.wells && data.wells.length > 0) {
-    const labHtml = `
+// Generar dinámicamente la tabla de laboratorios
+if (data.wells && data.wells.length > 0) {
+  // Calcular los totales
+  let totalMuestras = 0;
+  let totalMetros = 0;
+  
+  const sampleRows = data.wells.flatMap(well =>
+    (well.lab_shipments ?? []).flatMap(shipment =>
+      (shipment.sample_shipments ?? []).map(sample => {
+        const muestras = (sample.trc_to ?? 0) - (sample.trc_from ?? 0);
+        const metros = (sample.meters_to ?? 0) - (sample.meters_from ?? 0);
+        
+        totalMuestras += muestras;
+        totalMetros += metros;
+        
+        return { ...sample, wellName: well.name, wellDate: well.date }; // Agregamos los datos del pozo
+      })
+    )
+  );
+
+  const labHtml = `
+    <div>
       <div>
-       
-        <div>
-          <table border="1">
-            <thead>
+        <table border="1" style="width: 100%;">
+          <thead>
+            <tr>
+              <th colspan="8">ENVIO DE MUESTRAS DE SONDAJE AL LABORATORIO</th>
+            </tr>
+            <tr>
+              <th>FECHA</th>
+              <th>POZO</th>
+              <th>TRC</th>
+              <th colspan="2">TRC</th>
+              <th colspan="2">METROS</th>
+              <th>Total muestras</th>
+              <th>Total metros</th>
+              <th>OBSERVACION</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th>DESDE</th>
+              <th>HASTA</th>
+              <th>DESDE</th>
+              <th>HASTA</th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sampleRows.map(sample => `
               <tr>
-                <th>ENVIO DE MUESTRAS DE SONDAJE AL LABORATORIO</th>
+                <td>${sample.wellDate}</td> <!-- Fecha del pozo -->
+                <td>${sample.wellName}</td> <!-- Nombre del pozo -->
+                <td>${sample.trc}</td>
+                <td>${sample.trc_from}</td>
+                <td>${sample.trc_to}</td>
+                <td>${sample.meters_from}</td>
+                <td>${sample.meters_to}</td>
+                <td>${(sample.trc_to ?? 0) - (sample.trc_from ?? 0)}</td>
+                <td>${(sample.meters_to ?? 0) - (sample.meters_from ?? 0)}</td>
+                <td>${sample.observation}</td>
               </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <div style="display: flex; flex-direction: row;">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>FECHA</th>
-                          <th>POZO</th>
-                          <th>TRC</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        ${data.wells
-        .flatMap(well =>
-          (well.lab_shipments ?? []).flatMap(shipment =>
-            (shipment.sample_shipments ?? []).map(sample => `
-                                <tr>
-                                  <td>${sample.date}</td>
-                                  <td>${well.name}</td>
-                                  <td>${sample.trc}</td>
-                                </tr>
-                              `)
-          )
-        )
-        .join("")}
-                      </tbody>
-                    </table>
-
-                    <br> <!-- Espacio entre tablas -->
-
-                    <table border="1">
-                      <thead>
-                        <tr>
-                          <th colspan="2">TRC</th>
-                        </tr>
-                        <tr>
-                          <th>DESDE</th>
-                          <th>HASTA</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        ${data.wells
-        .flatMap(well =>
-          (well.lab_shipments ?? []).flatMap(shipment =>
-            (shipment.sample_shipments ?? []).map(sample => `
-                                <tr>
-                                  <td>${sample.trc_from}</td>
-                                  <td>${sample.trc_to}</td>
-                                </tr>
-                              `)
-          )
-        )
-        .join("")}
-                      </tbody>
-                    </table>
-
-                    <br> <!-- Espacio entre tablas -->
-
-                    <table border="1">
-                      <thead>
-                        <tr>
-                          <th colspan="2">METROS</th>
-                        </tr>
-                        <tr>
-                          <th>DESDE</th>
-                          <th>HASTA</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        ${data.wells
-        .flatMap(well =>
-          (well.lab_shipments ?? []).flatMap(shipment =>
-            (shipment.sample_shipments ?? []).map(sample => `
-                                <tr>
-                                  <td>${sample.meters_from}</td>
-                                  <td>${sample.meters_to}</td>
-                                </tr>
-                              `)
-          )
-        )
-        .join("")}
-                      </tbody>
-                    </table>
-
-                    <br> <!-- Espacio entre tablas -->
-
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>TOTAL</th>
-                          <th>TOTAL</th>
-                          <th>OBSERVACION</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        ${data.wells
-        .flatMap(well =>
-          (well.lab_shipments ?? []).flatMap(shipment =>
-            (shipment.sample_shipments ?? []).map(sample => `
-                                <tr>
-                                  <td> ${(sample.trc_to ?? 0) - (sample.trc_from ?? 0)}</td>
-                                  <td>${(sample.meters_to ?? 0) - (sample.meters_from ?? 0)}</td>
-                                  <td>${sample.observation}</td>
-                                </tr>
-                              `)
-          )
-        )
-        .join("")}
-                      </tbody>
-                    </table>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+            `).join('')}
+            <tr style="font-weight: bold; background-color: #f2f2f2;">
+              <td colspan="7" style="text-align: right;">TOTAL GENERAL</td>
+              <td>${totalMuestras}</td>
+              <td>${totalMetros}</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    `;
+    </div>
+  `;
 
-    // Reemplazar el placeholder {{lab_tables}} con las tablas generadas
-    populatedHtml = populatedHtml.replace("{{lab_tables}}", labHtml);
-  } else {
-    // Si no hay datos de laboratorio, mostrar un mensaje
-    populatedHtml = populatedHtml.replace("{{lab_tables}}", "<p>No hay datos de laboratorio disponibles</p>");
-  }
+  populatedHtml = populatedHtml.replace("{{lab_tables}}", labHtml);
+} else {
+  populatedHtml = populatedHtml.replace("{{lab_tables}}", "<p>No hay datos de laboratorio disponibles</p>");
+}
 
   // Generar dinámicamente las tablas de recepciones
   if (data.wells && data.wells.length > 0) {
