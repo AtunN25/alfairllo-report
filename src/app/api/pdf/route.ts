@@ -1,7 +1,7 @@
 // src/app/api/pdf/route.ts
 import { NextResponse } from 'next/server';
 
-import puppeteer from 'puppeteer-core'; 
+import puppeteer from 'puppeteer-core';
 import chromium from '@sparticuz/chromium'
 
 import path from 'path';
@@ -447,27 +447,27 @@ function populateTemplate(html: string, data: ProjectData): string {
     populatedHtml = populatedHtml.replace("{{wells_tables}}", "<p>No hay datos de pozos disponibles</p>");
   }
 
-// Generar dinámicamente la tabla de laboratorios
-if (data.wells && data.wells.length > 0) {
-  // Calcular los totales
-  let totalMuestras = 0;
-  let totalMetros = 0;
-  
-  const sampleRows = data.wells.flatMap(well =>
-    (well.lab_shipments ?? []).flatMap(shipment =>
-      (shipment.sample_shipments ?? []).map(sample => {
-        const muestras = (sample.trc_to ?? 0) - (sample.trc_from ?? 0);
-        const metros = (sample.meters_to ?? 0) - (sample.meters_from ?? 0);
-        
-        totalMuestras += muestras;
-        totalMetros += metros;
-        
-        return { ...sample, wellName: well.name, wellDate: well.date }; // Agregamos los datos del pozo
-      })
-    )
-  );
+  // Generar dinámicamente la tabla de laboratorios
+  if (data.wells && data.wells.length > 0) {
+    // Calcular los totales
+    let totalMuestras = 0;
+    let totalMetros = 0;
 
-  const labHtml = `
+    const sampleRows = data.wells.flatMap(well =>
+      (well.lab_shipments ?? []).flatMap(shipment =>
+        (shipment.sample_shipments ?? []).map(sample => {
+          const muestras = (sample.trc_to ?? 0) - (sample.trc_from ?? 0);
+          const metros = (sample.meters_to ?? 0) - (sample.meters_from ?? 0);
+
+          totalMuestras += muestras;
+          totalMetros += metros;
+
+          return { ...sample, wellName: well.name, wellDate: well.date }; // Agregamos los datos del pozo
+        })
+      )
+    );
+
+    const labHtml = `
     <div>
       <div>
         <table border="1" style="width: 100%;">
@@ -525,10 +525,10 @@ if (data.wells && data.wells.length > 0) {
     </div>
   `;
 
-  populatedHtml = populatedHtml.replace("{{lab_tables}}", labHtml);
-} else {
-  populatedHtml = populatedHtml.replace("{{lab_tables}}", "<p>No hay datos de laboratorio disponibles</p>");
-}
+    populatedHtml = populatedHtml.replace("{{lab_tables}}", labHtml);
+  } else {
+    populatedHtml = populatedHtml.replace("{{lab_tables}}", "<p>No hay datos de laboratorio disponibles</p>");
+  }
 
   // Generar dinámicamente las tablas de recepciones
   if (data.wells && data.wells.length > 0) {
@@ -1139,23 +1139,23 @@ export async function GET(req: Request) {
 
     console.log(jsonData);
 
-    
+
     const htmlFilePath = path.join(process.cwd(), 'src', 'components', 'pdf', 'template.html');
     let htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
     htmlContent = populateTemplate(htmlContent, jsonData);
 
-   
+
     const browser = await puppeteer.launch({
-      args: chromium.args, 
-      executablePath: await chromium.executablePath(), 
-      headless: true, 
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: true,
     });
 
     const page = await browser.newPage();
 
-  
+
     await page.setContent(htmlContent, {
-      waitUntil: 'networkidle0', 
+      waitUntil: 'networkidle0',
     });
 
     const pdfBuffer = await page.pdf({
