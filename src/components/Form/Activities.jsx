@@ -161,6 +161,7 @@ function Activities() {
                 : input
         );
         setActivityInputs(updatedInputs);
+        alert("Sub-activity added successfully!"); 
     };
 
     // Función para manejar el clic en "Eliminar subactividad"
