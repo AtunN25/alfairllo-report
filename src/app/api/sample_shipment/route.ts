@@ -3,7 +3,7 @@ import { neon } from '@neondatabase/serverless';
 
 export async function POST(req: Request) {
   try {
-    const { date, trc, trc_from, trc_to, meters_from, meters_to, observation, status, lab_shipment_id } = await req.json();
+    const { date, trc, trc_from, trc_to, meters_from, meters_to, observation, samples, lab_shipment_id } = await req.json();
 
     // Validación de los campos requeridos
     if (
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       meters_from === undefined ||
       meters_to === undefined ||
       !observation ||
-      !status ||
+      !samples ||
       !lab_shipment_id
     ) {
       return NextResponse.json(
@@ -30,10 +30,10 @@ export async function POST(req: Request) {
     // Inserción en la base de datos
     await sql`
       INSERT INTO Sample_Shipment(
-        Date, TRC, TRC_from, TRC_to, Meters_from, Meters_to, Observation, status, lab_shipment_id
+        Date, TRC, TRC_from, TRC_to, Meters_from, Meters_to, Observation, samples, lab_shipment_id
       )
       VALUES (
-        ${date}, ${trc}, ${trc_from}, ${trc_to}, ${meters_from}, ${meters_to}, ${observation}, ${status}, ${lab_shipment_id}
+        ${date}, ${trc}, ${trc_from}, ${trc_to}, ${meters_from}, ${meters_to}, ${observation}, ${samples}, ${lab_shipment_id}
       )
     `;
 

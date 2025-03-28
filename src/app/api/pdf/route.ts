@@ -1,7 +1,7 @@
 // src/app/api/pdf/route.ts
 import { NextResponse } from 'next/server';
 
-import puppeteer from 'puppeteer-core'; 
+import puppeteer from 'puppeteer-core';
 import chromium from '@sparticuz/chromium'
 
 import path from 'path';
@@ -112,7 +112,7 @@ interface ProjectData {
         meters_from: number | null;
         meters_to: number | null;
         observation: string | null;
-        status: string | null;
+        samples: number | null;
       }[];
     }[];
     reloggeo: {
@@ -228,304 +228,304 @@ function populateTemplate(html: string, data: ProjectData): string {
     populatedHtml = populatedHtml.replace("{{daily_activities}}", activitiesHtml);
   } else {
     // Si no hay actividades diarias, mostrar un mensaje
-    populatedHtml = populatedHtml.replace("{{daily_activities}}", "<p>No hay actividades diarias disponibles</p>");
+    populatedHtml = populatedHtml.replace("{{daily_activities}}", "<p>There are no daily activities available.</p>");
   }
 
-  // Generar dinámicamente las tablas de pozos
-  if (data.wells && data.wells.length > 0) {
-    const wellsHtml = `
+    // Generar dinámicamente las tablas de pozos
+    if (data.wells && data.wells.length > 0) {
+      const wellsHtml = `
 
-    <table border="1">
-  <thead>
-    <tr>
-      <!-- Encabezados principales -->
-      <th>METROS DE SONDAJE DDH LIBERADOS POR GEOLOGIA</th>
-      <th>AVANCES EN CORTE Y MUESTREO DE SONSAJES DDH</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <!-- Primera celda con las dos tablas dentro -->
-      <td>
-        <div style="display: flex; flex-direction: row;">
-          <table>
-            <thead>
-              <tr>
-                <th>EMPRESA</th>
-                <th>FECHA</th>
-                <th>POZOS</th>
-              </tr>
-            </thead>
-           <tbody>
-           
-           ${data.wells.flatMap(well =>
-
-      (well.loggeo ?? []).map(loggeo => `
-              <tr>
-                <td>${well.company.name}</td>
-                <td>${reportDate}</td>
-                <td>${well.name}</td>
-                <!-- ${loggeo} --> <!-- Aquí podrías usar loggeo si lo necesitas -->
-              </tr>
-            `)
-    ).join("")}
-        </tbody>
-          </table>
-
-          <br> <!-- Espacio entre tablas -->
-
-          <table border="1">
-            <thead>
-              <tr>
-                <th colspan="3">LOGGEO / MTS LIBERADO</th>
-              </tr>
-              <tr>
-                <th>DESDE</th>
-                <th>HASTA</th>
-                <th>TOTAL</th>
-              </tr>
-            </thead>
-             ${data.wells.flatMap(well => (well.loggeo ?? []).map(log => `
-            <tr>
-              <td>${log.from}</td>
-              <td>${log.to}</td>
-              <td>${(log.to ?? 0) - (log.from ?? 0)}</td>
-            </tr>
-          `)).join("")}
-          </table>
-        </div>
-      </td>
-
-      <!-- Segunda celda vacía (o puedes agregar contenido) -->
-      <td>
-        <div style="display: flex; flex-direction: row;">
-          <table>
-            <thead>
-              <tr>
-                <th>EMPRESA</th>
-                <th>FECHA</th>
-                <th>POZOS</th>
-              </tr>
-
-            </thead>
+      <table border="1">
+    <thead>
+      <tr>
+        <!-- Encabezados principales -->
+        <th>DRILLING METERS (DDH) RELEASED BY GEOLOGY</th>
+        <th>DDH CUTTING AND SAMPLING PROGRESS</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <!-- Primera celda con las dos tablas dentro -->
+        <td>
+          <div style="display: flex; flex-direction: row;">
+            <table>
+              <thead>
+                <tr>
+                <th>COMPANY</th>
+                  <th>DATE</th>
+                  <th>HOLES</th>
+                </tr>
+              </thead>
             <tbody>
-             ${data.wells.flatMap(well =>
-      (well.cut ?? []).map(cut => `
-        <tr>
-          <td>${well.company.name}</td>
-          <td>${reportDate}</td>
-          <td>${well.name}</td>
-          <!-- ${cut} --> <!-- Aquí podrías usar loggeo si lo necesitas -->
-        </tr>
-      `)
-    ).join("")}
-            </tbody>
-          </table>
+            
+            ${data.wells.flatMap(well =>
 
-          <br> <!-- Espacio entre tablas -->
+        (well.loggeo ?? []).map(loggeo => `
+                <tr>
+                  <td>${well.company.name}</td>
+                  <td>${reportDate}</td>
+                  <td>${well.name}</td>
+                  <!-- ${loggeo} --> <!-- Aquí podrías usar loggeo si lo necesitas -->
+                </tr>
+              `)
+      ).join("")}
+          </tbody>
+            </table>
 
-          <table border="1">
-            <thead>
+            <br> <!-- Espacio entre tablas -->
+
+            <table border="1">
+              <thead>
+                <tr>
+                  <th colspan="3">LOGGING/RELEASED MTS</th>
+                </tr>
+                <tr>
+                  <th>FROM</th>
+                  <th>TO</th>
+                  <th>TOTAL</th>
+                </tr>
+              </thead>
+              ${data.wells.flatMap(well => (well.loggeo ?? []).map(log => `
               <tr>
-                <th colspan="3">CUT</th>
+                <td>${log.from}</td>
+                <td>${log.to}</td>
+                <td>${(log.to ?? 0) - (log.from ?? 0)}</td>
               </tr>
-              <tr>
-                <th>DESDE</th>
-                <th>HASTA</th>
-                <th>TOTAL</th>
-              </tr>
-            </thead>
-             <tbody>
-          ${data.wells.flatMap(well => (well.cut ?? []).map(cut => `
-            <tr>
-              <td>${cut.from}</td>
-              <td>${cut.to}</td>
-              <td>${(cut.to ?? 0) - (cut.from ?? 0)}</td>
-            </tr>
-          `)).join("")}
-        </tbody>
-          </table>
+            `)).join("")}
+            </table>
+          </div>
+        </td>
 
-          <br> <!-- Espacio entre tablas -->
+        <!-- Segunda celda vacía (o puedes agregar contenido) -->
+        <td>
+          <div style="display: flex; flex-direction: row;">
+            <table>
+              <thead>
+                <tr>
+                  <th>COMPANY</th>
+                  <th>DATE</th>
+                  <th>HOLES</th>
+                </tr>
 
-          <table>
-            <thead>
-              <tr>
-                <th>METROSS SIN CORTAR</th>
-                <th>OBSERVACION</th>
-              </tr>
+              </thead>
+              <tbody>
+              ${data.wells.flatMap(well =>
+        (well.cut ?? []).map(cut => `
+          <tr>
+            <td>${well.company.name}</td>
+            <td>${reportDate}</td>
+            <td>${well.name}</td>
+            <!-- ${cut} --> <!-- Aquí podrías usar loggeo si lo necesitas -->
+          </tr>
+        `)
+      ).join("")}
+              </tbody>
+            </table>
 
-            </thead>
-            <tbody>
+            <br> <!-- Espacio entre tablas -->
+
+            <table border="1">
+              <thead>
+                <tr>
+                  <th colspan="3">CUT</th>
+                </tr>
+                <tr>
+                  <th>FROM</th>
+                  <th>TO</th>
+                  <th>TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
             ${data.wells.flatMap(well => (well.cut ?? []).map(cut => `
               <tr>
-                <td>${cut.uncut_meters}</td>
-                <td>${cut.observation}</td>
+                <td>${cut.from}</td>
+                <td>${cut.to}</td>
+                <td>${(cut.to ?? 0) - (cut.from ?? 0)}</td>
               </tr>
             `)).join("")}
-            </tbody>
-          </table>
+          </tbody>
+            </table>
 
-          <br> <!-- celeste -->
-          <table>
-            <thead>
-              <tr>
-                <th>EMPRESA</th>
-                <th>FECHA</th>
-              </tr>
+            <br> <!-- Espacio entre tablas -->
 
-            </thead>
-            <tbody>
-               ${data.wells.flatMap(well =>
-      (well.sampling_surveys ?? []).map(survey => `
-        <tr>
-          <td>${well.company.name}</td>
-          <td>${reportDate}</td>
-          <td>${well.name}</td>
-           <!-- ${survey} --> <!-- Aquí podrías usar survey si lo necesitas -->
-        </tr>
-      `)
-    ).join("")}
-            </tbody>
-          </table>
+            <table>
+              <thead>
+                <tr>
+                  <th>UNCUT METERS</th>
+                  <th>OBSERVATION</th>
+                </tr>
 
-          <table border="1">
-            <thead>
-              <tr>
-                <th colspan="3">MUESTREO</th>
-              </tr>
-              <tr>
-                <th>DESDE</th>
-                <th>HASTA</th>
-                <th>TOTAL</th>
-              </tr>
-            </thead>
-            <tbody>
-          ${data.wells.flatMap(well => (well.sampling_surveys ?? []).map(survey => `
-            <tr>
-              <td>${survey.from}</td>
-              <td>${survey.to}</td>
-              <td>${(survey.to ?? 0) - (survey.from ?? 0)}</td>
-            </tr>
-          `)).join("")}
-        </tbody>
-          </table>
+              </thead>
+              <tbody>
+              ${data.wells.flatMap(well => (well.cut ?? []).map(cut => `
+                <tr>
+                  <td>${cut.uncut_meters}</td>
+                  <td>${cut.observation}</td>
+                </tr>
+              `)).join("")}
+              </tbody>
+            </table>
 
-          <table>
-            <thead>
-              <tr>
-                <th>METROS SIN MUESTREAR</th>
-              </tr>
-            </thead>
-            <tbody>
+            <br> <!-- celeste -->
+            <table>
+              <thead>
+                <tr>
+                  <th>COMPANY</th>
+                  <th>DATE</th>
+                </tr>
+
+              </thead>
+              <tbody>
+                ${data.wells.flatMap(well =>
+        (well.sampling_surveys ?? []).map(survey => `
+          <tr>
+            <td>${well.company.name}</td>
+            <td>${reportDate}</td>
+            <td>${well.name}</td>
+            <!-- ${survey} --> <!-- Aquí podrías usar survey si lo necesitas -->
+          </tr>
+        `)
+      ).join("")}
+              </tbody>
+            </table>
+
+            <table border="1">
+              <thead>
+                <tr>
+                  <th colspan="3">MUESTREO</th>
+                </tr>
+                <tr>
+                  <th>FROM</th>
+                  <th>TO</th>
+                  <th>TOTAL</th>
+                </tr>
+              </thead>
+              <tbody>
             ${data.wells.flatMap(well => (well.sampling_surveys ?? []).map(survey => `
               <tr>
-                <td>${survey.unsampled_meters}</td>
-                
+                <td>${survey.from}</td>
+                <td>${survey.to}</td>
+                <td>${(survey.to ?? 0) - (survey.from ?? 0)}</td>
               </tr>
             `)).join("")}
+          </tbody>
+            </table>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>UNSAMPLED METERS</th>
+                </tr>
+              </thead>
+              <tbody>
+              ${data.wells.flatMap(well => (well.sampling_surveys ?? []).map(survey => `
+                <tr>
+                  <td>${survey.unsampled_meters}</td>
+                  
+                </tr>
+              `)).join("")}
+              </tbody>
+            </table>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+  
+
+      `;
+
+      // Reemplazar el placeholder {{wells_tables}} con las tablas generadas
+      populatedHtml = populatedHtml.replace("{{wells_tables}}", wellsHtml);
+    } else {
+      // Si no hay pozos, mostrar un mensaje
+      populatedHtml = populatedHtml.replace("{{wells_tables}}", "<p>No well data available</p>");
+    }
+
+  // Generar dinámicamente la tabla de laboratorios
+  if (data.wells && data.wells.length > 0) {
+    // Calcular los totales
+    let totalMuestras = 0;
+    let totalMetros = 0;
+
+    const sampleRows = data.wells.flatMap(well =>
+      (well.lab_shipments ?? []).flatMap(shipment =>
+        (shipment.sample_shipments ?? []).map(sample => {
+          const muestras = sample.samples ?? 0
+          const metros = (sample.meters_to ?? 0) - (sample.meters_from ?? 0);
+
+          totalMuestras += muestras;
+          totalMetros += metros;
+
+          return { ...sample, wellName: well.name, wellDate: well.date }; // Agregamos los datos del pozo
+        })
+      )
+    );
+
+    const labHtml = `
+      <div>
+        <div>
+          <table border="1" style="width: 100%;">
+            <thead>
+              <tr>
+                <th colspan="8">DRILL SAMPLE SHIPMENT TO LABORATORY</th>
+              </tr>
+              <tr>
+                <th>DATE</th>
+                <th>HOLE</th>
+                <th>TRC</th>
+                <th colspan="2">TRC RANGE</th>
+                <th colspan="2">METERS</th>
+                <th>Total samples</th>
+                <th>Total meters</th>
+                <th>OBSERVATION</th>
+              </tr>
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>FROM</th>
+                <th>TO</th>
+                <th>FROM</th>
+                <th>TO</th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${sampleRows.map(sample => `
+                <tr>
+                  <td>${reportDate}</td> <!-- Fecha del pozo -->
+                  <td>${sample.wellName}</td> <!-- Nombre del pozo -->
+                  <td>${sample.trc}</td>
+                  <td>${sample.trc_from}</td>
+                  <td>${sample.trc_to}</td>
+                  <td>${sample.meters_from}</td>
+                  <td>${sample.meters_to}</td>
+                  <td>${sample.samples}</td>
+                  <td>${(sample.meters_to ?? 0) - (sample.meters_from ?? 0)}</td>
+                  <td>${sample.observation}</td>
+                </tr>
+              `).join('')}
+              <tr style="font-weight: bold; background-color: #f2f2f2;">
+                <td colspan="7" style="text-align: right;">TOTAL GENERAL</td>
+                <td>${totalMuestras}</td>
+                <td>${totalMetros}</td>
+                <td></td>
+              </tr>
             </tbody>
           </table>
         </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-
- 
-
+      </div>
     `;
 
-    // Reemplazar el placeholder {{wells_tables}} con las tablas generadas
-    populatedHtml = populatedHtml.replace("{{wells_tables}}", wellsHtml);
+    populatedHtml = populatedHtml.replace("{{lab_tables}}", labHtml);
   } else {
-    // Si no hay pozos, mostrar un mensaje
-    populatedHtml = populatedHtml.replace("{{wells_tables}}", "<p>No hay datos de pozos disponibles</p>");
+    populatedHtml = populatedHtml.replace("{{lab_tables}}", "<p>No hay datos de laboratorio disponibles</p>");
   }
-
-// Generar dinámicamente la tabla de laboratorios
-if (data.wells && data.wells.length > 0) {
-  // Calcular los totales
-  let totalMuestras = 0;
-  let totalMetros = 0;
-  
-  const sampleRows = data.wells.flatMap(well =>
-    (well.lab_shipments ?? []).flatMap(shipment =>
-      (shipment.sample_shipments ?? []).map(sample => {
-        const muestras = (sample.trc_to ?? 0) - (sample.trc_from ?? 0);
-        const metros = (sample.meters_to ?? 0) - (sample.meters_from ?? 0);
-        
-        totalMuestras += muestras;
-        totalMetros += metros;
-        
-        return { ...sample, wellName: well.name, wellDate: well.date }; // Agregamos los datos del pozo
-      })
-    )
-  );
-
-  const labHtml = `
-    <div>
-      <div>
-        <table border="1" style="width: 100%;">
-          <thead>
-            <tr>
-              <th colspan="8">ENVIO DE MUESTRAS DE SONDAJE AL LABORATORIO</th>
-            </tr>
-            <tr>
-              <th>FECHA</th>
-              <th>POZO</th>
-              <th>TRC</th>
-              <th colspan="2">TRC</th>
-              <th colspan="2">METROS</th>
-              <th>Total muestras</th>
-              <th>Total metros</th>
-              <th>OBSERVACION</th>
-            </tr>
-            <tr>
-              <th></th>
-              <th></th>
-              <th></th>
-              <th>DESDE</th>
-              <th>HASTA</th>
-              <th>DESDE</th>
-              <th>HASTA</th>
-              <th></th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            ${sampleRows.map(sample => `
-              <tr>
-                <td>${reportDate}</td> <!-- Fecha del pozo -->
-                <td>${sample.wellName}</td> <!-- Nombre del pozo -->
-                <td>${sample.trc}</td>
-                <td>${sample.trc_from}</td>
-                <td>${sample.trc_to}</td>
-                <td>${sample.meters_from}</td>
-                <td>${sample.meters_to}</td>
-                <td>${(sample.trc_to ?? 0) - (sample.trc_from ?? 0)}</td>
-                <td>${(sample.meters_to ?? 0) - (sample.meters_from ?? 0)}</td>
-                <td>${sample.observation}</td>
-              </tr>
-            `).join('')}
-            <tr style="font-weight: bold; background-color: #f2f2f2;">
-              <td colspan="7" style="text-align: right;">TOTAL GENERAL</td>
-              <td>${totalMuestras}</td>
-              <td>${totalMetros}</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  `;
-
-  populatedHtml = populatedHtml.replace("{{lab_tables}}", labHtml);
-} else {
-  populatedHtml = populatedHtml.replace("{{lab_tables}}", "<p>No hay datos de laboratorio disponibles</p>");
-}
 
   // Generar dinámicamente las tablas de recepciones
   if (data.wells && data.wells.length > 0) {
@@ -537,14 +537,14 @@ if (data.wells && data.wells.length > 0) {
               <th rowspan="2">LOGO</th>
 
               <!-- Columna del medio: Recepción Muestra de perforación -->
-              <th>Recepcion Muestra de perforacion</th>
+               <th>Drill Sample Reception</th>
 
               <!-- Tercera columna: AVANCE DIARIO EN MUESTRA DGG 2024 -->
-              <th rowspan="2">AVANCE DIARIO EN MUESTRA DGG 2024</th>
+              <th rowspan="2">DAILY SAMPLING PROGRESS DGG 2024</th>
             </tr>
             <tr>
               <!-- Columna del medio: Turno día y noche -->
-              <th>Turno dia y noche</th>
+              <th>Day & Night Shift</th>
             </tr>
           </thead>
           <tbody style="padding: 0; border: none;">
@@ -554,9 +554,9 @@ if (data.wells && data.wells.length > 0) {
                 <table>
                   <thead style="height: 21px;">
                     <tr>
-                      <th>EMPRESA</th>
-                      <th>FECHA</th>
-                      <th>POZO</th>
+                      <th>COMPANY</th>
+                      <th>DATE</th>
+                      <th>HOLE</th>
                     </tr>
 
                   </thead>
@@ -581,15 +581,15 @@ if (data.wells && data.wells.length > 0) {
                   <thead>
                     <tr>
                       <!-- Primera columna: LOGO -->
-                      <th rowspan="2" COLSPAN=2>Recepcion de muestra</th>
+                      <th rowspan="2" COLSPAN=2>Sample Reception</th>
 
                       <!-- Columna del medio: Recepción Muestra de perforación -->
-                      <th>MTS</th>
+                       <th>MTS</th>
 
                     </tr>
                     <tr>
                       <!-- Columna del medio: Turno día y noche -->
-                      <th>PERFORADOS</th>
+                     <th>DRILLED</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -619,12 +619,12 @@ if (data.wells && data.wells.length > 0) {
               <thead>
                 <!-- Primer encabezado que ocupa 3 columnas -->
                 <tr>
-                  <th colspan="3">photographs</th>
+                   <th colspan="3">PHOTOGRAPHS</th>
                 </tr>
                 <!-- Segundo encabezado con 3 columnas -->
                 <tr>
-                  <th>DESDE</th>
-                  <th>HASTA</th>
+                  <th>FROM</th>
+                  <th>TO</th>
                   <th>TOTAL</th>
                 </tr>
               </thead>
@@ -651,12 +651,12 @@ if (data.wells && data.wells.length > 0) {
               <thead>
                 <!-- Primer encabezado que ocupa 3 columnas -->
                 <tr>
-                  <th colspan="3">regularized</th>
+                  <th colspan="3">REGULARIZED</th>
                 </tr>
                 <!-- Segundo encabezado con 3 columnas -->
                 <tr>
-                  <th>DESDE</th>
-                  <th>HASTA</th>
+                  <th>FROM</th>
+                  <th>TO</th>
                   <th>TOTAL</th>
                 </tr>
               </thead>
@@ -680,12 +680,12 @@ if (data.wells && data.wells.length > 0) {
               <thead>
                 <!-- Primer encabezado que ocupa 3 columnas -->
                 <tr>
-                  <th colspan="3">rqd</th>
+                  <th colspan="3">RQD</th>
                 </tr>
                 <!-- Segundo encabezado con 3 columnas -->
                 <tr>
-                  <th>DESDE</th>
-                  <th>HASTA</th>
+                  <th>FROM</th>
+                  <th>TO</th>
                   <th>TOTAL</th>
                 </tr>
               </thead>
@@ -711,12 +711,12 @@ if (data.wells && data.wells.length > 0) {
               <thead>
                 <!-- Primer encabezado que ocupa 3 columnas -->
                 <tr>
-                  <th colspan="3">susceptibility</th>
+                  <th colspan="3">SUSCEPTIBILITY</th>
                 </tr>
                 <!-- Segundo encabezado con 3 columnas -->
                 <tr>
-                  <th>DESDE</th>
-                  <th>HASTA</th>
+                  <th>FROM</th>
+                  <th>TO</th>
                   <th>TOTAL</th>
                 </tr>
               </thead>
@@ -742,12 +742,12 @@ if (data.wells && data.wells.length > 0) {
               <thead>
                 <!-- Primer encabezado que ocupa 3 columnas -->
                 <tr>
-                  <th colspan="3">test_tubes_meters-provetas</th>
+                  <th colspan="3">N OF TEST TUBES</th>
                 </tr>
                 <!-- Segundo encabezado con 3 columnas -->
                 <tr>
-                  <th>from</th>
-                  <th>to</th>
+                  <th>FROM</th>
+                  <th>TO</th>
                   <th>TOTAL</th>
                 </tr>
               </thead>
@@ -773,13 +773,13 @@ if (data.wells && data.wells.length > 0) {
               <thead>
                 <!-- Primer encabezado que ocupa 3 columnas -->
                 <tr>
-                  <th colspan="3">test_tubes_meters-metros</th>
-                  <th rowspan="2">OBSERVACIONES</th>
+                  <th colspan="3">METERS</th>
+                  <th rowspan="2">OBSERVATIONS</th>
                 </tr>
                 <!-- Segundo encabezado con 3 columnas -->
                 <tr>
-                  <th>from_meters</th>
-                  <th>to_meters</th>
+                  <th>FROM </th>
+                  <th>TO </th>
                   <th>TOTAL</th>
                 </tr>
               </thead>
@@ -814,7 +814,7 @@ if (data.wells && data.wells.length > 0) {
     populatedHtml = populatedHtml.replace("{{receptions_tables}}", receptionsHtml);
   } else {
     // Si no hay recepciones, mostrar un mensaje
-    populatedHtml = populatedHtml.replace("{{receptions_tables}}", "<p>No hay datos de recepciones disponibles</p>");
+    populatedHtml = populatedHtml.replace("{{receptions_tables}}", "<p>No reception data available</p>");
   }
 
 
@@ -826,18 +826,18 @@ if (data.wells && data.wells.length > 0) {
         <table border="1">
           <thead>
             <tr>
-              <th colspan="9">DATOS DE RELOGGEO</th>
+              <th colspan="9">RE-LOGGING DATA</th>
             </tr>
             <tr>
-              <th>POZO</th> <!-- Nueva columna para el nombre del pozo -->
-              <th>PRIORIDAD</th>
-              <th>PROGRAMADO</th>
-              <th>DESDE</th>
-              <th>HASTA</th>
-              <th>RELOGGING</th>
-              <th>GEÓLOGO</th>
-              <th>FECHA</th>
-              <th>OBSERVACIÓN</th>
+              <th>HOLE</th> <!-- Nueva columna para el nombre del pozo -->
+              <th>PRIORITY</th>
+              <th>SCHEDULED</th>
+              <th>FROM</th>
+              <th>TO</th>
+              <th>RE-LOGGING</th>
+              <th>GEOLOGIST</th>
+              <th>DATE</th>
+              <th>OBSERVATION</th>
             </tr>
           </thead>
           <tbody>
@@ -912,7 +912,7 @@ export async function GET(req: Request) {
 
     const report_date = reportInfo[0].report_date;
 
-   
+
     const result = await sql`
       
       SELECT json_build_object(
@@ -1095,7 +1095,7 @@ export async function GET(req: Request) {
                           'meters_from', samp.Meters_From,
                           'meters_to', samp.Meters_to,
                           'observation', samp.Observation,
-                          'status', samp.Status
+                          'samples', samp.samples
                         )
                       )
                       FROM Sample_Shipment samp
@@ -1148,23 +1148,23 @@ export async function GET(req: Request) {
 
     console.log(jsonData);
 
-    
+
     const htmlFilePath = path.join(process.cwd(), 'src', 'components', 'pdf', 'template.html');
     let htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
     htmlContent = populateTemplate(htmlContent, jsonData);
 
-   
+
     const browser = await puppeteer.launch({
-      args: chromium.args, 
-      executablePath: await chromium.executablePath(), 
-      headless: true, 
+      args: chromium.args,
+      executablePath: await chromium.executablePath(),
+      headless: true,
     });
 
     const page = await browser.newPage();
 
-  
+
     await page.setContent(htmlContent, {
-      waitUntil: 'networkidle0', 
+      waitUntil: 'networkidle0',
     });
 
     const pdfBuffer = await page.pdf({

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { getCompanies } from '@/services/company'
+import { getCompanies,createCompany } from '@/services/company'
 import { createWell, getWells } from '@/services/wellService'
 
 function Sondaje() {
@@ -226,6 +226,46 @@ function Sondaje() {
         }
     };
 
+    //company
+    const [showCompanyForm, setShowCompanyForm] = useState(false);
+    const [newCompanyName, setNewCompanyName] = useState('');
+
+
+    const handleOpenCompanyForm = () => {
+        setShowCompanyForm(true);
+    };
+
+
+    const handleCloseCompanyForm = () => {
+        setShowCompanyForm(false);
+        setNewCompanyName('');
+    };
+
+
+    const handleCreateCompany = async () => {
+        if (!newCompanyName.trim()) {
+            alert('El nombre de la compañía es requerido');
+            return;
+        }
+
+        try {
+            const createdCompany = await createCompany(newCompanyName);
+
+            const updatedCompanies = await getCompanies();
+            setCompanies(updatedCompanies);
+
+            setWell(prev => ({
+                ...prev,
+                company_id: createdCompany.id.toString()
+            }));
+
+            handleCloseCompanyForm();
+
+            alert("successfully created company")
+        } catch (error) {
+            alert(error.message);
+        }
+    };
 
     return (
         <div className="cartadiv">
@@ -293,9 +333,20 @@ function Sondaje() {
                                     />
                                 </div>
 
+                                <label className="block text-sm font-medium text-gray-700">Company:</label>
                                 {/* Campo: Compañía */}
-                                <div className="mb-4">
-                                    <label className="block text-sm font-medium text-gray-700">Company:</label>
+                                <div className="mb-4 flex space-x-21">
+                                    <div className="flex justify-between items-center">
+                                        
+                                        <button
+                                            type="button"
+                                            onClick={handleOpenCompanyForm}
+                                            className="text-xs bg-slate-600 p-2 rounded-md text-white "
+                                        >
+                                            + New Company
+                                        </button>
+                                    </div>
+                                    
                                     <select
                                         name="company_id"
                                         value={well.company_id}
@@ -339,8 +390,43 @@ function Sondaje() {
                         </div>
                     </div>
                 )}
-
             </div>
+
+                 {/* Modal para nueva compañía */}
+            {showCompanyForm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+                        <h2 className="text-xl font-bold mb-4">Add New Company</h2>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700">Company Name:</label>
+                            <input
+                                type="text"
+                                value={newCompanyName}
+                                onChange={(e) => setNewCompanyName(e.target.value)}
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                                required
+                                autoFocus
+                            />
+                        </div>
+                        <div className="flex justify-end space-x-4">
+                            <button
+                                type="button"
+                                onClick={handleCloseCompanyForm}
+                                className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleCreateCompany}
+                                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors"
+                            >
+                                Create Company
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="px-6 py-2 pb-3">
                 <p className="text-gray-700 text-base">LOGGING/RELEASED METERS (meters):</p>
