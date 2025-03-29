@@ -68,6 +68,23 @@
       height: auto;
       float: right;
     }
+
+    .image-container {
+      text-align: center;
+      margin: 30px 0; /* Ajusta este valor para el espacio deseado arriba y abajo */
+      padding: 20px 0; /* Padding interno para separación adicional */
+    }
+
+    .signature-section {
+      font-size: 15px; /* Tamaño de letra más pequeño */
+      text-align: left;
+      margin-top: 20px;
+    }
+
+    .signature-section p {
+      margin: 5px 0; /* Espaciado entre los párrafos */
+      line-height: 1.2; /* Altura de línea ajustada */
+    }
   </style>
 </head>
 
@@ -107,18 +124,17 @@
   {{reloggeo_tables}}
 
 
-  {{imagen}}
+  <div class="image-container">
+    {{imagen}}
+  </div>
 
-  Sampling supervisor
-
-
-  <p>{{name}}</p>
-
-  <p>{{Overseer}}</p>
-
-  <p>{{Date.Year}}</p>
-
-  <p>{{email}}</p>
+  <div class="signature-section">
+    <p>Sampling supervisor</p>
+    <p>{{name}}</p>
+    <p>{{Overseer}}</p>
+    <p>{{Date.Year}}</p>
+    <p>{{email}}</p>
+  </div>
 
   </div>
 </body>
