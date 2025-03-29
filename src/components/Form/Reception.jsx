@@ -72,9 +72,6 @@ function Reception() {
     // Función para manejar el envío de datos
     const handleSubmit = async (e) => {
 
-
-
-
         console.log(reception);
 
         const receptionPost = {
