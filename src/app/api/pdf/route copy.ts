@@ -130,6 +130,7 @@ interface ProjectData {
 }
 
 
+
 function populateTemplate(html: string, data: ProjectData): string {
   console.log("📌 Data recibida:", JSON.stringify(data, null, 2));
 
@@ -238,8 +239,8 @@ function populateTemplate(html: string, data: ProjectData): string {
     <thead>
       <tr>
         <!-- Encabezados principales -->
-        <th class="th-rosado" >DRILLING METERS (DDH) RELEASED BY GEOLOGY</th>
-        <th class="th-anaranjado" >DDH CUTTING AND SAMPLING PROGRESS</th>
+        <th>DRILLING METERS (DDH) RELEASED BY GEOLOGY</th>
+        <th>DDH CUTTING AND SAMPLING PROGRESS</th>
       </tr>
     </thead>
     <tbody>
@@ -247,20 +248,16 @@ function populateTemplate(html: string, data: ProjectData): string {
         <!-- Primera celda con las dos tablas dentro -->
         <td>
           <div style="display: flex; flex-direction: row;">
-            <table >
-              <thead class="th-rosadop">
+            <table>
+              <thead>
                 <tr>
-                  <th >COMPANY</th>
-                  <th >DATE</th>
+                <th>COMPANY</th>
+                  <th>DATE</th>
                   <th>HOLES</th>
                 </tr>
               </thead>
-            <tbody >
-                <tr class="th-rosadop">
-                  <th></th> 
-                  <th></th> 
-                  <th></th> 
-                </tr>
+            <tbody>
+            
             ${data.wells.flatMap(well =>
 
         (well.loggeo ?? []).map(loggeo => `
@@ -278,7 +275,7 @@ function populateTemplate(html: string, data: ProjectData): string {
             <br> <!-- Espacio entre tablas -->
 
             <table border="1">
-              <thead class="th-rosadop">
+              <thead>
                 <tr>
                   <th colspan="3">LOGGING/RELEASED MTS</th>
                 </tr>
@@ -303,7 +300,7 @@ function populateTemplate(html: string, data: ProjectData): string {
         <td>
           <div style="display: flex; flex-direction: row;">
             <table>
-              <thead class="th-amarillo">
+              <thead>
                 <tr>
                   <th>COMPANY</th>
                   <th>DATE</th>
@@ -311,12 +308,7 @@ function populateTemplate(html: string, data: ProjectData): string {
                 </tr>
 
               </thead>
-              <tbody class="th-amarillo">
-               <tr>
-                  <th></th>   
-                  <th></th> 
-                  <th></th> 
-                </tr>
+              <tbody>
               ${data.wells.flatMap(well =>
         (well.cut ?? []).map(cut => `
           <tr>
@@ -333,7 +325,7 @@ function populateTemplate(html: string, data: ProjectData): string {
             <br> <!-- Espacio entre tablas -->
 
             <table border="1">
-              <thead class="th-amarillo">
+              <thead>
                 <tr>
                   <th colspan="3">CUT</th>
                 </tr>
@@ -357,21 +349,14 @@ function populateTemplate(html: string, data: ProjectData): string {
             <br> <!-- Espacio entre tablas -->
 
             <table>
-              <thead class="th-amarillo">
+              <thead>
                 <tr>
                   <th>UNCUT METERS</th>
                   <th>OBSERVATION</th>
                 </tr>
 
               </thead>
-
               <tbody>
-
-               <tr class="th-amarillo">
-                  <th></th>   
-                  <th></th> 
-                  
-                </tr>
               ${data.wells.flatMap(well => (well.cut ?? []).map(cut => `
                 <tr>
                   <td>${cut.uncut_meters}</td>
@@ -383,20 +368,15 @@ function populateTemplate(html: string, data: ProjectData): string {
 
             <br> <!-- celeste -->
             <table>
-              <thead class="th-celeste">
+              <thead>
                 <tr>
-                  <th >COMPANY</th>
+                  <th>COMPANY</th>
                   <th>DATE</th>
                   <th>HOLES</th>
                 </tr>
 
-              </thead >
-              <tbody >
-                <tr class="th-celeste">
-                  <th></th>   
-                  <th></th>  
-                  <th></th>     
-                </tr>
+              </thead>
+              <tbody>
                 ${data.wells.flatMap(well =>
         (well.sampling_surveys ?? []).map(survey => `
           <tr>
@@ -411,8 +391,8 @@ function populateTemplate(html: string, data: ProjectData): string {
             </table>
 
             <table border="1">
-              <thead class="th-celeste">
-                <tr1>
+              <thead>
+                <tr>
                   <th colspan="3">MUESTREO</th>
                 </tr>
                 <tr>
@@ -433,16 +413,12 @@ function populateTemplate(html: string, data: ProjectData): string {
             </table>
 
             <table>
-              <thead class="th-celeste">
+              <thead>
                 <tr>
                   <th>UNSAMPLED METERS</th>
                 </tr>
               </thead>
               <tbody>
-               
-                <tr class="th-celeste">
-                  <th></th>      
-                </tr>
               ${data.wells.flatMap(well => (well.sampling_surveys ?? []).map(survey => `
                 <tr>
                   <td>${survey.unsampled_meters}</td>
@@ -495,9 +471,9 @@ function populateTemplate(html: string, data: ProjectData): string {
           <table border="1" style="width: 100%;">
             <thead>
               <tr>
-                <th colspan="10" class="th-rosado" >DRILL SAMPLE SHIPMENT TO LABORATORY</th>
+                <th colspan="8">DRILL SAMPLE SHIPMENT TO LABORATORY</th>
               </tr>
-              <tr class="th-celeste">
+              <tr>
                 <th>DATE</th>
                 <th>HOLE</th>
                 <th>TRC</th>
@@ -507,11 +483,11 @@ function populateTemplate(html: string, data: ProjectData): string {
                 <th>Total meters</th>
                 <th>OBSERVATION</th>
               </tr>
-              <tr class="th-celeste">
+              <tr>
                 <th></th>
                 <th></th>
                 <th></th>
-                <th >FROM</th>
+                <th>FROM</th>
                 <th>TO</th>
                 <th>FROM</th>
                 <th>TO</th>
@@ -535,10 +511,10 @@ function populateTemplate(html: string, data: ProjectData): string {
                   <td>${sample.observation}</td>
                 </tr>
               `).join('')}
-              <tr class="th-celeste-profundo">
-                <td class="th-celeste-profundo" colspan="7" style="text-align: right;">TOTAL GENERAL</td>
-                <td class="th-celeste-profundo" >${totalMuestras}</td>
-                <td class="th-celeste-profundo">${totalMetros}</td>
+              <tr style="font-weight: bold; background-color: #f2f2f2;">
+                <td colspan="7" style="text-align: right;">TOTAL GENERAL</td>
+                <td>${totalMuestras}</td>
+                <td>${totalMetros}</td>
                 <td></td>
               </tr>
             </tbody>
@@ -557,7 +533,7 @@ function populateTemplate(html: string, data: ProjectData): string {
     const receptionsHtml = `
         <table>
           <thead>
-            <tr class="th-anaranjado">
+            <tr>
             
               <th rowspan="2">LOGO</th>
 
@@ -567,18 +543,18 @@ function populateTemplate(html: string, data: ProjectData): string {
               
               <th rowspan="2">DAILY SAMPLING PROGRESS DGG 2024</th>
             </tr>
-            <tr class="th-anaranjado">
+            <tr>
               <!-- Columna del medio: Turno día y noche -->
               <th>Day & Night Shift</th>
             </tr>
           </thead>
           <tbody style="padding: 0; border: none;">
-            <tr class="th-anaranjado">
+            <tr>
               <!-- Celda del LOGO con tabla interna -->
               <td style="padding: 0; border: none;">
                 <table>
-                  <thead class="th-anaranjado" >
-                    <tr >
+                  <thead style="height: 21px;">
+                    <tr>
                       <th>COMPANY</th>
                       <th>DATE</th>
                       <th>HOLE</th>
@@ -586,28 +562,24 @@ function populateTemplate(html: string, data: ProjectData): string {
 
                   </thead>
                   <tbody>
-                    <tr class="th-anaranjado">
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                  
+                  ${data.wells.flatMap(well =>
+      (well.receptions ?? []).map(reception => `
+                      <tr>
+                        <td>${well.company.name}</td>
+                        <td>${reportDate}</td>
+                        <td>${well.name}</td>
+                        <!-- ${reception} --> <!-- Aquí podrías usar survey si lo necesitas -->
                       </tr>
-                    ${data.wells.flatMap(well =>
-                      (well.receptions ?? []).map(reception => `
-                                      <tr>
-                                        <td>${well.company.name}</td>
-                                        <td>${reportDate}</td>
-                                        <td>${well.name}</td>
-                                        <!-- ${reception} --> <!-- Aquí podrías usar survey si lo necesitas -->
-                                      </tr>
-                                    `).join("")
-                    ).join("")}
+                    `).join("")
+    ).join("")}
                   </tbody>
                 </table>
               </td>
               <!-- Otras celdas -->
               <td style="padding: 0; border: none;">
                 <table>
-                  <thead class="th-anaranjado">
+                  <thead>
                     <tr>
                       <!-- Primera columna: LOGO -->
                       <th rowspan="2" COLSPAN=2>Sample Reception</th>
@@ -645,7 +617,7 @@ function populateTemplate(html: string, data: ProjectData): string {
 
           <div style="display: flex; flex-direction: row;">
             <table>
-              <thead class="th-anaranjado">
+              <thead>
                 <!-- Primer encabezado que ocupa 3 columnas -->
                 <tr>
                    <th colspan="3">PHOTOGRAPHS</th>
@@ -677,7 +649,7 @@ function populateTemplate(html: string, data: ProjectData): string {
             </table>
 
             <table>
-              <thead class="th-anaranjado">
+              <thead>
                 <!-- Primer encabezado que ocupa 3 columnas -->
                 <tr>
                   <th colspan="3">REGULARIZED</th>
@@ -706,7 +678,7 @@ function populateTemplate(html: string, data: ProjectData): string {
             </table>
 
             <table>
-              <thead class="th-anaranjado">
+              <thead>
                 <!-- Primer encabezado que ocupa 3 columnas -->
                 <tr>
                   <th colspan="3">RQD</th>
@@ -737,7 +709,7 @@ function populateTemplate(html: string, data: ProjectData): string {
             </table>
 
             <table>
-              <thead class="th-anaranjado">
+              <thead>
                 <!-- Primer encabezado que ocupa 3 columnas -->
                 <tr>
                   <th colspan="3">SUSCEPTIBILITY</th>
@@ -768,10 +740,10 @@ function populateTemplate(html: string, data: ProjectData): string {
             </table>
 
             <table>
-              <thead class="th-anaranjado">
+              <thead>
                 <!-- Primer encabezado que ocupa 3 columnas -->
                 <tr>
-                  <th colspan="3">N TEST TUBES</th>
+                  <th colspan="3">N OF TEST TUBES</th>
                 </tr>
                 <!-- Segundo encabezado con 3 columnas -->
                 <tr>
@@ -799,7 +771,7 @@ function populateTemplate(html: string, data: ProjectData): string {
             </table>
 
             <table>
-              <thead class="th-anaranjado">
+              <thead>
                 <!-- Primer encabezado que ocupa 3 columnas -->
                 <tr>
                   <th colspan="3">METERS</th>
@@ -854,10 +826,10 @@ function populateTemplate(html: string, data: ProjectData): string {
       <div>
         <table border="1">
           <thead>
-            <tr class="th-celeste">
+            <tr>
               <th colspan="9">RE-LOGGING DATA</th>
             </tr>
-            <tr class="th-celeste">
+            <tr>
               <th>HOLE</th> <!-- Nueva columna para el nombre del pozo -->
               <th>PRIORITY</th>
               <th>SCHEDULED</th>

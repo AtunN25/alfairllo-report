@@ -6,6 +6,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reporte PDF</title>
   <style>
+
+    @media print {
+      th {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        background-color: inherit !important;
+      }
+    }
+
+    /* Estilos para los colores específicos */
+    .th-rosado {
+      background-color: #deb0cf !important;
+    }
+
+    .th-rosadop {
+      background-color: #ea85c8 !important;
+    }
+
+    .th-anaranjado {
+      background-color: #eed558 !important;
+    }
+
+    .th-amarillo {
+      background-color: hsl(61, 89%, 56%) !important;
+    }
+
+    .th-celeste {
+      background-color: #ADD8E6 !important;
+    }
+
+    .th-celeste-profundo {
+      background-color: #488fc9 !important;
+  
+    }
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -85,6 +120,21 @@
       margin: 5px 0; /* Espaciado entre los párrafos */
       line-height: 1.2; /* Altura de línea ajustada */
     }
+
+    table tbody tr {
+      height: 22px; /* o cualquier altura que necesites */
+   
+      
+    }
+
+    th, td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
+  }
+
+ 
+
   </style>
 </head>
 
