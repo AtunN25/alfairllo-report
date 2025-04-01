@@ -12,11 +12,11 @@ function Reception() {
         pozo: "",
         from: null,
         to: null,
-        photographs: [],
-        regularized: [],
-        rqd: [],
-        susceptibility: [],
-        test_tubes_meters: [],
+        photographs: { from: null, to: null  },
+        regularized: { from: null, to: null },
+        rqd: { from: null, to: null },
+        susceptibility: { from: null, to: null },
+        test_tubes_meters: { from: null, to: null },
         from_meters: 0,
         to_meters: 0,
         observation: ""
@@ -32,12 +32,13 @@ function Reception() {
 
     // Función para manejar el cambio en los inputs de tipo "desde-hasta"
     const handleRangeChange = (field, from, to) => {
-        setReception((prev) => ({
+        setReception(prev => ({
             ...prev,
-            [field]: [
-                ...prev[field], // Mantener los valores existentes
-                { id: prev[field].length + 1, from, to } // Agregar nuevo rango
-            ]
+            [field]: {
+                ...prev[field],  
+                from: from !== null ? from : prev[field].from,  
+                to: to !== null ? to : prev[field].to           
+            }
         }));
     };
 
@@ -62,6 +63,7 @@ function Reception() {
             console.error(`Error en ${tableName}:`, error);
         }
     };
+
     const getCurrentDate = () => {
         const today = new Date();
         const year = today.getFullYear();
@@ -69,6 +71,7 @@ function Reception() {
         const day = String(today.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
+
     // Función para manejar el envío de datos
     const handleSubmit = async (e) => {
 
@@ -94,83 +97,47 @@ function Reception() {
 
             const data = await response.json();
 
+            console.log('Respuesta de reception:', data);
+
             if (response.ok) {
-                alert(`reception enviado exitosamente. ID de reception: ${data.reception_id}`);
-                console.log('los valores enviados por reception son :', data)
-                // Enviar cada subtitle con el safety_talk_id
 
-                const photographs = reception.photographs;
+                const receptionId = data.reception_id;
+              
+                await sendDataToTable('photograph', {
+                    from: reception.photographs.from,
+                    to: reception.photographs.to,
+                    reception_id: receptionId
+                });
+        
+                await sendDataToTable('regularized', {
+                    from: reception.regularized.from,
+                    to: reception.regularized.to,
+                    reception_id: receptionId
+                });
+        
+                await sendDataToTable('rqd', {
+                    from: reception.rqd.from,
+                    to: reception.rqd.to,
+                    reception_id: receptionId
+                });
+                
+                await sendDataToTable('susceptibility', {
+                    from: reception.susceptibility.from,
+                    to: reception.susceptibility.to,
+                    reception_id: receptionId
+                });
 
-                const regularized = reception.regularized;
-                const rqd = reception.rqd;
-                const susceptibility = reception.susceptibility;
-                const test_tubes_meters = reception.test_tubes_meters;
 
-                const mergedPhotograph = reception.photographs.map(photo => ({
-                    from: photographs.find(photo => photo.from !== null)?.from || null,
-                    to: [...photographs].reverse().find(photo => photo.to !== null)?.to || null,
-                    reception_id: data.reception_id
-                }));
-
-                if (response.ok) {
-                    alert(`reception enviado exitosamente. ID de reception: ${data.reception_id}`);
-
-                    // Obtener los arrays de la recepción
-                    const photographs = reception.photographs;
-                    const regularized = reception.regularized;
-                    const rqd = reception.rqd;
-                    const susceptibility = reception.susceptibility;
-                    const test_tubes_meters = reception.test_tubes_meters;
-
-                    // Generar los objetos para cada tabla
-                    const mergedPhotograph = photographs.map(photo => ({
-                        from: photographs.find(photo => photo.from !== null)?.from || null,
-                        to: [...photographs].reverse().find(photo => photo.to !== null)?.to || null,
-                        reception_id: data.reception_id
-                    }));
-
-                    const mergedRegularized = regularized.map(item => ({
-                        from: regularized.find(item => item.from !== null)?.from || null,
-                        to: [...regularized].reverse().find(item => item.to !== null)?.to || null,
-                        reception_id: data.reception_id
-                    }));
-
-                    const mergedRQD = rqd.map(item => ({
-                        from: rqd.find(item => item.from !== null)?.from || null,
-                        to: [...rqd].reverse().find(item => item.to !== null)?.to || null,
-                        reception_id: data.reception_id
-                    }));
-
-                    const mergedSusceptibility = susceptibility.map(item => ({
-                        from: susceptibility.find(item => item.from !== null)?.from || null,
-                        to: [...susceptibility].reverse().find(item => item.to !== null)?.to || null,
-                        reception_id: data.reception_id
-                    }));
-
-                    const mergedTestTubesMeters = test_tubes_meters.map(item => ({
-                        from: test_tubes_meters.find(item => item.from !== null)?.from || null,
-                        to: [...test_tubes_meters].reverse().find(item => item.to !== null)?.to || null,
-                        reception_id: data.reception_id,
-                        from_meters: reception.from_meters || 0,
-                        to_meters: reception.to_meters || 0
-                    }));
-
-                    // Verificar los datos antes de enviarlos
-                    console.log('photograph:', mergedPhotograph[0]);
-                    console.log('regularized:', mergedRegularized[0]);
-                    console.log('rqd:', mergedRQD[0]);
-                    console.log('susceptibility:', mergedSusceptibility[0]);
-                    console.log('test_tubes_meters:', mergedTestTubesMeters[0]);
-
-                    // Enviar los objetos a las tablas correspondientes
-                    await sendDataToTable('photograph', mergedPhotograph[0]);
-                    await sendDataToTable('regularized', mergedRegularized[0]);
-                    await sendDataToTable('rqd', mergedRQD[0]);
-                    await sendDataToTable('susceptibility', mergedSusceptibility[0]);
-                    await sendDataToTable('test_tubes_meters', mergedTestTubesMeters[0]);
-
-                    alert('Datos enviados exitosamente a todas las tablas.');
-                }
+                await sendDataToTable('test_tubes_meters', {
+                    from: reception.test_tubes_meters.from,
+                    to: reception.test_tubes_meters.to,
+                    reception_id: receptionId,
+                    from_meters: reception.from_meters,
+                    to_meters: reception.to_meters
+                });
+                
+                
+                alert('Datos enviados exitosamente a todas las tablas');
 
             } else {
                 alert('Error al enviar el reporte');
@@ -524,12 +491,14 @@ function Reception() {
                         placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("photographs", parseFloat(e.target.value), null)}
+                        value={reception.photographs.from || ''}
                     />
                     <input
                         type="number"
                         placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("photographs", null, parseFloat(e.target.value))}
+                        value={reception.photographs.to || ''}
                     />
                 </div>
             </div>
@@ -543,12 +512,14 @@ function Reception() {
                         placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("regularized", parseFloat(e.target.value), null)}
+                        value={reception.regularized.from || ''}
                     />
                     <input
                         type="number"
                         placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("regularized", null, parseFloat(e.target.value))}
+                        value={reception.regularized.to || ''}
                     />
                 </div>
             </div>
@@ -562,12 +533,14 @@ function Reception() {
                         placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("rqd", parseFloat(e.target.value), null)}
+                        value={reception.rqd.from || ''}
                     />
                     <input
                         type="number"
                         placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("rqd", null, parseFloat(e.target.value))}
+                        value={reception.rqd.to || ''}
                     />
                 </div>
             </div>
@@ -581,12 +554,14 @@ function Reception() {
                         placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("susceptibility", parseFloat(e.target.value), null)}
+                        value={reception.susceptibility.from || ''}
                     />
                     <input
                         type="number"
                         placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("susceptibility", null, parseFloat(e.target.value))}
+                        value={reception.susceptibility.to || ''}
                     />
                 </div>
             </div>
@@ -600,12 +575,14 @@ function Reception() {
                         placeholder="From"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("test_tubes_meters", parseFloat(e.target.value), null)}
+                        value={reception.test_tubes_meters.from || ''}
                     />
                     <input
                         type="number"
                         placeholder="To"
                         className="w-1/2 bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         onChange={(e) => handleRangeChange("test_tubes_meters", null, parseFloat(e.target.value))}
+                        value={reception.test_tubes_meters.to || ''}
                     />
                 </div>
             </div>
