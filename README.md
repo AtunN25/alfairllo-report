@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sistema de Gestión de Muestras Geológicas 🌋
 
-## Getting Started
+Proyecto desarrollado en colaboración con `Alfarillo Group` para el registro, gestión y generación de reportes de muestras geológicas. El sistema será implementado en un entorno real para validar su eficiencia.
 
-First, run the development server:
+## 📌 Características principales
+- `Formulario de ingreso de muestras` con validación de datos.
+- `Generación de reportes` automatizados basados en requisitos geológicos.
+- `Interfaz intuitiva` con 3 páginas: principal, formulario y reportes.
+- `Base de datos especializada` para datos geotécnicos.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ⏳ Desarrollo
+- **Duración**: 3 meses
+- **Equipo**: 
+  - **1 desarrollador** (yo): Implementación completa en Next.js
+  - **1 supervisor/experto geólogo** (Alfarillo Group):
+    - Contacto directo con el cliente
+    - Diseño del diagrama de base de datos
+    - Validación de requisitos técnicos-geológicos
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 Tecnologías utilizadas
+| Área       | Tecnología          |
+|------------|---------------------|
+| Frontend   | Next.js             |
+| Backend    | Next.js API Routes  |
+| Base de datos | Neon (PostgreSQL serverless) |
+| Diseño DB  | Diagrama proporcionado por experto geólogo |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🖥 Estructura del sistema
+Sistema basado en:
+1. **Requisitos técnicos** del cliente procesados por el egresado de la carrera profesional de Ingeniería Geológica
+2. **Esquema de base de datos** diseñado por Alfarillo Group
+3. **Reporte de ejemplo** adaptado a flujo digital
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Páginas principales
+1. **Dashboard principal**: Visualización de muestras registradas
+2. **Formulario técnico**: Campos validados para datos geológicos
+3. **Reportes especializados**: Exportación en formatos usados en geología
 
-## Learn More
+## 📸 Capturas del sistema
 
-To learn more about Next.js, take a look at the following resources:
+### 1. Página principal
+![Dashboard de muestras](/path/to/image1.jpg)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. Formulario de ingreso
+![Formulario técnico](/path/to/image2.jpg)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 3. Generación de reportes
+![Reporte geológico](/path/to/image3.jpg)
 
-## Deploy on Vercel
+## 🔎 Contexto de desarrollo
+Como único desarrollador:
+- Implementé soluciones técnicas adaptadas a necesidades geológicas
+- Trabajé en estrecha colaboración con el experto para:
+  - Traducir requisitos geotécnicos a funcionalidades
+  - Validar tipos de datos y relaciones en la DB
+  - Asegurar que los reportes generados cumplen estándares profesionales
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+✏️ *Desarrollado en colaboración con Alfarillo Group - Especialistas en Geología Aplicada*
