@@ -70,15 +70,13 @@ function Page({ params }) {
 
 
   return (
-    <div className='bg-black h-screen w-full p-16 border rounded-lg text-white flex space-x-4'>
+    <div className='bg-slate-200 h-screen w-full p-16 border rounded-lg text-white flex space-x-4'>
 
-
-
-      <div className="max-w-sm p-6  border  rounded-lg shadow-sm bg-gray-800 border-gray-700 space-y-4 flex flex-col">
+      <div className="max-w-sm p-6  border  rounded-lg shadow-sm bg-white cartadiv space-y-4 flex flex-col">
         <a href="#">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight  text-white">Generate PDF Report</h5>
+          <h5 className="mb-2 text-2xl font-bold tracking-tight text-black">Generate PDF Report</h5>
         </a>
-        <p className="mb-3 font-normal  text-gray-400">If you want to generate previous reports, change the value to the ID of the report you want to generate...</p>
+        <p className="mb-3 font-normal  text-gray-800">If you want to generate previous reports, change the value to the ID of the report you want to generate...</p>
 
         <input
           type="number"
@@ -86,7 +84,7 @@ function Page({ params }) {
           value={projectId}
           onChange={(e) => setProjectId(e.target.value)}
 
-          className=" bg-transparent placeholder:text-slate-400  text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+          className=" bg-transparent text-black placeholder:text-slate-400  text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
         />
 
         <input
@@ -95,7 +93,7 @@ function Page({ params }) {
           value={fileName}
           onChange={(e) => setFileName(e.target.value)}
 
-          className=" bg-transparent placeholder:text-slate-400  text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+          className=" bg-transparent text-black placeholder:text-slate-400  text-sm border border-slate-200 rounded-md px-5 py-4 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
         />
 
 
