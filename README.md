@@ -1,6 +1,6 @@
 # Sistema de Gestión de Muestras Geológicas 🌋
 
-Es un legado y proyecto desarrollado en colaboración con `Alfarillo Group` para el registro, gestión y generación de reportes de muestras geológicas.
+Es un `legado` y proyecto desarrollado en colaboración con `Alfarillo Group` para el registro, gestión y generación de reportes de muestras geológicas.
 
 ## 📌 Características principales
 - `Formulario de ingreso de muestras` con validación de datos.
